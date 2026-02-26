@@ -138,8 +138,9 @@ const Admin: React.FC = () => {
       }
     }
 
-    // Combine existing preview URLs (which might be existing images) with new uploads
-    const allImageUrls = [...imagePreviewUrls, ...newImageUrls];
+    // Separate existing URLs from new object URLs
+    const existingImageUrls = imagePreviewUrls.slice(0, imagePreviewUrls.length - imageFiles.length);
+    const allImageUrls = [...existingImageUrls, ...newImageUrls];
 
     const payload = {
       name: form.name,
