@@ -7,7 +7,7 @@ import { useOrders } from '@/hooks/useOrders';
 import { useLanguage } from '@/hooks/useLanguage';
 import type { Product, Order } from '@/types';
 import { toast } from 'sonner';
-import { LogOut, Plus, Pencil, Trash2, Package, ShoppingBag } from 'lucide-react';
+import { LogOut, Plus, Pencil, Trash2, Package, ShoppingBag, X } from 'lucide-react';
 import type { Session } from '@supabase/supabase-js';
 
 const emptyProduct = { name: '', description: '', old_price: '', new_price: '', category: '', is_sold: false };
@@ -23,7 +23,8 @@ const Admin: React.FC = () => {
   const [editing, setEditing] = useState<Product | null>(null);
   const [form, setForm] = useState(emptyProduct);
   const [showForm, setShowForm] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -54,12 +55,23 @@ const Admin: React.FC = () => {
       category: product.category || '',
       is_sold: product.is_sold,
     });
+    // Set existing images for editing
+    if (product.image_urls && product.image_urls.length > 0) {
+      setImagePreviewUrls(product.image_urls);
+    } else if (product.image_url) {
+      setImagePreviewUrls([product.image_url]);
+    } else {
+      setImagePreviewUrls([]);
+    }
+    setImageFiles([]);
     setShowForm(true);
   };
 
   const openNew = () => {
     setEditing(null);
     setForm(emptyProduct);
+    setImageFiles([]);
+    setImagePreviewUrls([]);
     setShowForm(true);
   };
 
@@ -72,20 +84,62 @@ const Admin: React.FC = () => {
     return data.publicUrl;
   };
 
+  const uploadImages = async (files: File[]): Promise<string[]> => {
+    const urls: string[] = [];
+    for (const file of files) {
+      const url = await uploadImage(file);
+      if (url) urls.push(url);
+    }
+    return urls;
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const validFiles = files.filter(file => file.size <= 5 * 1024 * 1024);
+    
+    if (validFiles.length !== files.length) {
+      toast.error('Some images were skipped. Maximum size is 5MB per image.');
+    }
+
+    setImageFiles(prev => [...prev, ...validFiles]);
+    
+    // Create preview URLs for new files
+    const newPreviewUrls = validFiles.map(file => URL.createObjectURL(file));
+    setImagePreviewUrls(prev => [...prev, ...newPreviewUrls]);
+  };
+
+  const removeImage = (index: number) => {
+    // Revoke object URL to avoid memory leaks
+    if (index < imageFiles.length) {
+      URL.revokeObjectURL(imagePreviewUrls[index]);
+    }
+    
+    setImageFiles(prev => prev.filter((_, i) => i !== index));
+    setImagePreviewUrls(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const clearAllImages = () => {
+    imagePreviewUrls.forEach(url => URL.revokeObjectURL(url));
+    setImageFiles([]);
+    setImagePreviewUrls([]);
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
 
-    let image_url = editing?.image_url || null;
-    if (imageFile) {
-      if (imageFile.size > 5 * 1024 * 1024) {
-        toast.error('Image must be under 5MB');
+    // Upload new images if any
+    let newImageUrls: string[] = [];
+    if (imageFiles.length > 0) {
+      newImageUrls = await uploadImages(imageFiles);
+      if (newImageUrls.length === 0 && imageFiles.length > 0) {
         setSaving(false);
         return;
       }
-      image_url = await uploadImage(imageFile);
-      if (!image_url) { setSaving(false); return; }
     }
+
+    // Combine existing preview URLs (which might be existing images) with new uploads
+    const allImageUrls = [...imagePreviewUrls, ...newImageUrls];
 
     const payload = {
       name: form.name,
@@ -94,7 +148,8 @@ const Admin: React.FC = () => {
       new_price: parseFloat(form.new_price),
       category: form.category || null,
       is_sold: form.is_sold,
-      image_url,
+      image_url: allImageUrls.length > 0 ? allImageUrls[0] : null, // Keep for backward compatibility
+      image_urls: allImageUrls,
     };
 
     if (editing) {
@@ -107,7 +162,8 @@ const Admin: React.FC = () => {
 
     setSaving(false);
     setShowForm(false);
-    setImageFile(null);
+    setImageFiles([]);
+    setImagePreviewUrls([]);
   };
 
   const deleteProduct = async (id: string) => {
@@ -212,9 +268,61 @@ const Admin: React.FC = () => {
                         className="w-full mt-1 px-3 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
                     </div>
                     <div>
-                      <label className="text-sm text-muted-foreground">{t('upload_image')}</label>
-                      <input ref={fileRef} type="file" accept="image/*" onChange={e => setImageFile(e.target.files?.[0] || null)}
-                        className="w-full mt-1 text-sm text-muted-foreground" />
+                      <label className="text-sm text-muted-foreground">{t('upload_images')} (Max 5MB per image)</label>
+                      
+                      {/* Image Preview Grid */}
+                      {imagePreviewUrls.length > 0 && (
+                        <div className="mt-2 grid grid-cols-3 gap-2">
+                          {imagePreviewUrls.map((url, index) => (
+                            <div key={index} className="relative group">
+                              <img 
+                                src={url} 
+                                alt={`Preview ${index + 1}`}
+                                className="w-full h-20 object-cover rounded border border-border"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeImage(index)}
+                                className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X size={12} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Upload Button */}
+                      <div className="mt-2">
+                        <input
+                          ref={fileRef}
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => fileRef.current?.click()}
+                          className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-muted transition-colors text-sm"
+                        >
+                          {imagePreviewUrls.length > 0 ? 'Add More Images' : 'Select Images'}
+                        </button>
+                        {imagePreviewUrls.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={clearAllImages}
+                            className="ml-2 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors text-sm"
+                          >
+                            Clear All
+                          </button>
+                        )}
+                      </div>
+                      
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {imagePreviewUrls.length} image(s) selected
+                      </p>
                     </div>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="checkbox" checked={form.is_sold} onChange={e => setForm(p => ({ ...p, is_sold: e.target.checked }))}

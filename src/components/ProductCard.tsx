@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import type { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
+import ImageSlider from './ImageSlider';
 
 interface Props {
   product: Product;
@@ -13,6 +14,17 @@ interface Props {
 const ProductCard: React.FC<Props> = ({ product, index }) => {
   const { t } = useTranslation();
   const { addItem } = useCart();
+
+  // Get all images - use new image_urls array or fallback to single image_url
+  const getAllImages = (): string[] => {
+    if (product.image_urls && product.image_urls.length > 0) {
+      return product.image_urls;
+    }
+    if (product.image_url) {
+      return [product.image_url];
+    }
+    return [];
+  };
 
   return (
     <motion.div
@@ -34,34 +46,25 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
         }}
       />
       
-      <div className="aspect-[4/5] overflow-hidden bg-muted relative">
-        {product.image_url ? (
-          <motion.img
-            src={product.image_url}
-            alt={product.name}
-            className="w-full h-full object-cover"
-            loading="lazy"
-            whileHover={{ scale: 1.12 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground/20">
-            <ShoppingCart size={64} strokeWidth={0.5} />
-          </div>
-        )}
+      <div className="relative">
+        <ImageSlider 
+          images={getAllImages()} 
+          alt={product.name}
+          className="w-full"
+        />
         {product.is_sold && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
-            className="absolute top-4 start-4 bg-destructive/90 backdrop-blur-sm text-destructive-foreground px-5 py-2 rounded-full text-xs font-bold tracking-wide shadow-lg"
+            className="absolute top-4 start-4 bg-destructive/90 backdrop-blur-sm text-destructive-foreground px-5 py-2 rounded-full text-xs font-bold tracking-wide shadow-lg z-10"
           >
             {t('sold_out')}
           </motion.div>
         )}
         {/* Luxury overlay on hover */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10"
         />
       </div>
 

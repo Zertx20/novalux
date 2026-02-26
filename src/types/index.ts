@@ -5,7 +5,8 @@ export interface Product {
   old_price: number | null;
   new_price: number;
   category: string | null;
-  image_url: string | null;
+  image_url: string | null; // Keep for backward compatibility
+  image_urls: string[]; // New field for multiple images
   is_sold: boolean;
   created_at: string;
 }
