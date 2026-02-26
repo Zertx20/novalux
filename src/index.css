@@ -6,40 +6,40 @@
 
 @layer base {
   :root {
-    --background: 30 10% 97%;
-    --foreground: 30 10% 8%;
+    --background: 45 25% 97%;
+    --foreground: 30 15% 10%;
 
-    --card: 30 15% 95%;
-    --card-foreground: 30 10% 8%;
+    --card: 45 25% 100%;
+    --card-foreground: 30 15% 10%;
 
-    --popover: 30 10% 97%;
-    --popover-foreground: 30 10% 8%;
+    --popover: 45 25% 100%;
+    --popover-foreground: 30 15% 10%;
 
-    --primary: 40 65% 50%;
-    --primary-foreground: 30 10% 97%;
+    --primary: 38 75% 55%;
+    --primary-foreground: 45 25% 97%;
 
-    --secondary: 30 10% 90%;
-    --secondary-foreground: 30 10% 20%;
+    --secondary: 45 20% 95%;
+    --secondary-foreground: 30 15% 15%;
 
-    --muted: 30 10% 92%;
-    --muted-foreground: 30 5% 45%;
+    --muted: 45 15% 92%;
+    --muted-foreground: 30 8% 45%;
 
-    --accent: 40 65% 50%;
-    --accent-foreground: 30 10% 97%;
+    --accent: 38 75% 55%;
+    --accent-foreground: 45 25% 97%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 15% 88%;
-    --input: 30 15% 88%;
-    --ring: 40 65% 50%;
+    --border: 45 15% 88%;
+    --input: 45 15% 88%;
+    --ring: 38 75% 55%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --gold: 40 65% 50%;
-    --gold-light: 40 70% 65%;
-    --gold-dark: 40 55% 35%;
-    --gold-muted: 40 30% 80%;
+    --gold: 38 75% 55%;
+    --gold-light: 38 80% 70%;
+    --gold-dark: 38 65% 40%;
+    --gold-muted: 38 25% 85%;
 
     --sidebar-background: 30 10% 95%;
     --sidebar-foreground: 30 10% 20%;
@@ -56,47 +56,47 @@
   }
 
   .dark {
-    --background: 30 5% 8%;
-    --foreground: 30 15% 92%;
+    --background: 30 8% 6%;
+    --foreground: 45 25% 95%;
 
-    --card: 30 5% 12%;
-    --card-foreground: 30 15% 92%;
+    --card: 30 8% 10%;
+    --card-foreground: 45 25% 95%;
 
-    --popover: 30 5% 10%;
-    --popover-foreground: 30 15% 92%;
+    --popover: 30 8% 8%;
+    --popover-foreground: 45 25% 95%;
 
-    --primary: 40 65% 50%;
-    --primary-foreground: 30 5% 8%;
+    --primary: 38 75% 55%;
+    --primary-foreground: 30 8% 6%;
 
-    --secondary: 30 5% 18%;
-    --secondary-foreground: 30 15% 85%;
+    --secondary: 30 8% 15%;
+    --secondary-foreground: 45 25% 90%;
 
-    --muted: 30 5% 18%;
-    --muted-foreground: 30 10% 55%;
+    --muted: 30 8% 15%;
+    --muted-foreground: 45 15% 60%;
 
-    --accent: 40 65% 50%;
-    --accent-foreground: 30 5% 8%;
+    --accent: 38 75% 55%;
+    --accent-foreground: 30 8% 6%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 5% 20%;
-    --input: 30 5% 20%;
-    --ring: 40 65% 50%;
+    --border: 30 8% 18%;
+    --input: 30 8% 18%;
+    --ring: 38 75% 55%;
 
-    --gold: 40 65% 50%;
-    --gold-light: 40 70% 65%;
-    --gold-dark: 40 55% 35%;
-    --gold-muted: 40 20% 25%;
+    --gold: 38 75% 55%;
+    --gold-light: 38 80% 70%;
+    --gold-dark: 38 65% 40%;
+    --gold-muted: 38 15% 20%;
 
-    --sidebar-background: 30 5% 10%;
-    --sidebar-foreground: 30 15% 85%;
-    --sidebar-primary: 40 65% 50%;
-    --sidebar-primary-foreground: 30 5% 8%;
-    --sidebar-accent: 30 5% 18%;
-    --sidebar-accent-foreground: 30 15% 85%;
-    --sidebar-border: 30 5% 20%;
-    --sidebar-ring: 40 65% 50%;
+    --sidebar-background: 30 8% 8%;
+    --sidebar-foreground: 45 25% 90%;
+    --sidebar-primary: 38 75% 55%;
+    --sidebar-primary-foreground: 30 8% 6%;
+    --sidebar-accent: 30 8% 15%;
+    --sidebar-accent-foreground: 45 25% 90%;
+    --sidebar-border: 30 8% 18%;
+    --sidebar-ring: 38 75% 55%;
   }
 }
 
@@ -139,5 +139,26 @@
 
   .gold-border {
     border-color: hsl(var(--gold) / 0.3);
+  }
+
+  .luxury-shadow {
+    box-shadow: 0 4px 20px -4px hsl(var(--gold) / 0.15);
+  }
+
+  .luxury-shadow-lg {
+    box-shadow: 0 10px 40px -10px hsl(var(--gold) / 0.2);
+  }
+
+  .fade-in {
+    animation: fade-in 0.8s ease-out forwards;
+  }
+
+  .hover-luxury {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-luxury:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px -8px hsl(var(--gold) / 0.25);
   }
 }

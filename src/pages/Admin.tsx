@@ -144,9 +144,14 @@ const Admin: React.FC = () => {
             </div>
             <h1 className="font-heading font-bold text-lg gold-text">{t('admin')}</h1>
           </div>
-          <button onClick={handleLogout} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-            <LogOut size={16} /> {t('logout')}
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => navigate('/')} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <ShoppingBag size={16} /> {t('go_to_website')}
+            </button>
+            <button onClick={handleLogout} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <LogOut size={16} /> {t('logout')}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -167,7 +172,7 @@ const Admin: React.FC = () => {
         {tab === 'products' && (
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="font-heading text-xl font-bold">{t('products')}</h2>
+              <h2 className="font-heading text-2xl font-bold">{t('products')}</h2>
               <button onClick={openNew} className="flex items-center gap-2 gold-gradient px-4 py-2 rounded-lg text-background text-sm font-medium hover:opacity-90 transition-opacity">
                 <Plus size={16} /> {t('add_product')}
               </button>
@@ -241,7 +246,7 @@ const Admin: React.FC = () => {
                     )}
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium truncate">{product.name}</h4>
-                      <p className="text-sm text-primary font-bold">{product.new_price.toFixed(2)} {t('currency')}</p>
+                      <p className="text-sm text-primary font-bold">{product.new_price.toFixed(0)} {t('currency')}</p>
                       {product.is_sold && <span className="text-xs text-destructive">{t('sold_out')}</span>}
                     </div>
                     <div className="flex gap-2">
@@ -293,7 +298,7 @@ const Admin: React.FC = () => {
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary">{order.total_price.toFixed(2)} {t('currency')}</span>
+                      <span className="font-bold text-primary">{order.total_price.toFixed(0)} {t('currency')}</span>
                       <div className="flex gap-1">
                         {(['pending', 'confirmed', 'cancelled'] as const).map(status => (
                           <button key={status} onClick={() => updateOrderStatus(order.id, status)}

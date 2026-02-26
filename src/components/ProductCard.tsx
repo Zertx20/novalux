@@ -16,59 +16,122 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.1 }}
-      className="group bg-card rounded-lg border border-border overflow-hidden hover:border-primary/30 transition-all hover:shadow-lg hover:shadow-primary/5"
+      transition={{ duration: 0.8, delay: index * 0.15, ease: "easeOut" }}
+      className="group bg-card rounded-2xl border border-border/20 overflow-hidden hover-luxury fade-in relative luxury-glow"
+      whileHover={{ 
+        y: -8,
+        transition: { duration: 0.3, ease: "easeOut" }
+      }}
     >
-      <div className="aspect-square overflow-hidden bg-muted relative">
+      {/* Gold glow effect on hover */}
+      <motion.div
+        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none z-10"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(198, 167, 94, 0.15) 0%, transparent 70%)',
+          filter: 'blur(25px)',
+        }}
+      />
+      
+      <div className="aspect-[4/5] overflow-hidden bg-muted relative">
         {product.image_url ? (
-          <img
+          <motion.img
             src={product.image_url}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover"
             loading="lazy"
+            whileHover={{ scale: 1.12 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-            <ShoppingCart size={48} />
+          <div className="w-full h-full flex items-center justify-center text-muted-foreground/20">
+            <ShoppingCart size={64} strokeWidth={0.5} />
           </div>
         )}
         {product.is_sold && (
-          <div className="absolute top-3 start-3 bg-destructive text-destructive-foreground px-3 py-1 rounded-full text-xs font-bold">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            className="absolute top-4 start-4 bg-destructive/90 backdrop-blur-sm text-destructive-foreground px-5 py-2 rounded-full text-xs font-bold tracking-wide shadow-lg"
+          >
             {t('sold_out')}
-          </div>
+          </motion.div>
         )}
+        {/* Luxury overlay on hover */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        />
       </div>
 
-      <div className="p-4">
-        <h3 className="font-heading font-semibold text-lg text-foreground mb-1">{product.name}</h3>
+      <div className="p-6 relative z-10">
+        <motion.h3 
+          className="font-heading font-semibold text-xl text-foreground mb-3 leading-tight group-hover:text-primary transition-colors duration-300"
+          whileHover={{ x: 4 }}
+        >
+          {product.name}
+        </motion.h3>
         {product.description && (
-          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{product.description}</p>
+          <motion.p 
+            className="text-sm text-muted-foreground mb-5 line-clamp-2 leading-relaxed font-light"
+            initial={{ opacity: 0.7 }}
+            whileHover={{ opacity: 1 }}
+          >
+            {product.description}
+          </motion.p>
         )}
 
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-4 mb-7">
           {product.old_price && (
-            <span className="text-sm text-muted-foreground line-through">
-              {product.old_price.toFixed(2)} {t('currency')}
-            </span>
+            <motion.span 
+              className="text-sm text-muted-foreground line-through font-light"
+              initial={{ opacity: 0.6 }}
+              whileHover={{ opacity: 1 }}
+            >
+              {product.old_price.toFixed(0)} {t('currency')}
+            </motion.span>
           )}
-          <span className="text-lg font-bold text-primary">
-            {product.new_price.toFixed(2)} {t('currency')}
-          </span>
+          <motion.span 
+            className="text-2xl font-bold gold-text"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+          >
+            {product.new_price.toFixed(0)} {t('currency')}
+          </motion.span>
         </div>
 
-        <button
+        <motion.button
           onClick={() => !product.is_sold && addItem(product)}
           disabled={product.is_sold}
-          className={`w-full py-2.5 rounded-lg font-medium text-sm transition-all ${
+          className={`w-full py-4 rounded-xl font-medium text-base transition-all duration-300 relative overflow-hidden group ${
             product.is_sold
-              ? 'bg-muted text-muted-foreground cursor-not-allowed'
-              : 'gold-gradient text-background hover:opacity-90 active:scale-[0.98]'
+              ? 'bg-muted/30 text-muted-foreground cursor-not-allowed border border-border/20'
+              : 'gold-gradient text-background hover:scale-[1.02] hover-luxury luxury-shadow-lg font-semibold'
           }`}
+          whileHover={!product.is_sold ? { scale: 1.02 } : {}}
+          whileTap={!product.is_sold ? { scale: 0.98 } : {}}
         >
+          {/* Shimmer effect for available products */}
+          {!product.is_sold && (
+            <motion.div
+              className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500"
+              style={{
+                background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%)',
+              }}
+              animate={{
+                x: ['-100%', '100%'],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatDelay: 3,
+                ease: "easeInOut"
+              }}
+            />
+          )}
           {product.is_sold ? t('sold_out') : t('add_to_cart')}
-        </button>
+        </motion.button>
       </div>
     </motion.div>
   );
