@@ -53,7 +53,7 @@ const Navbar: React.FC = () => {
             >
               {t('home')}
               <motion.div
-                className="absolute bottom-0 left-0 w-0 h-0.5 gold-gradient transition-all duration-300 group-hover:w-full"
+                className="absolute bottom-0 left-0 w-0 h-0.5 purple-gradient transition-all duration-300 group-hover:w-full"
                 initial={false}
                 whileHover={{ width: '100%' }}
               />
@@ -71,7 +71,7 @@ const Navbar: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <motion.div
-              className="absolute inset-0 gold-gradient opacity-0 hover:opacity-20 transition-opacity duration-300"
+              className="absolute inset-0 purple-gradient opacity-0 hover:opacity-20 transition-opacity duration-300"
             />
             <ShoppingCart size={20} />
             {itemCount > 0 && (

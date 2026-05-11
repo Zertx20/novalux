@@ -31,17 +31,17 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: index * 0.15, ease: "easeOut" }}
-      className="group bg-card rounded-2xl border border-border/20 overflow-hidden hover-luxury fade-in relative luxury-glow"
+      className="group bg-black rounded-2xl border border-border/20 overflow-hidden hover-luxury fade-in relative luxury-glow"
       whileHover={{ 
         y: -8,
         transition: { duration: 0.3, ease: "easeOut" }
       }}
     >
-      {/* Gold glow effect on hover */}
+      {/* Purple glow effect on hover */}
       <motion.div
         className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none z-10"
         style={{
-          background: 'radial-gradient(circle at center, rgba(198, 167, 94, 0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(circle at center, rgba(147, 51, 234, 0.15) 0%, transparent 70%)',
           filter: 'blur(25px)',
         }}
       />
@@ -96,7 +96,7 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
             </motion.span>
           )}
           <motion.span 
-            className="text-2xl font-bold gold-text"
+            className="text-2xl font-bold purple-text"
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
           >
@@ -110,8 +110,14 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
           className={`w-full py-4 rounded-xl font-medium text-base transition-all duration-300 relative overflow-hidden group ${
             product.is_sold
               ? 'bg-muted/30 text-muted-foreground cursor-not-allowed border border-border/20'
-              : 'gold-gradient text-background hover:scale-[1.02] hover-luxury luxury-shadow-lg font-semibold'
+              : 'font-semibold shadow-lg'
           }`}
+          style={!product.is_sold ? {
+            backgroundColor: 'white',
+            color: '#9333ea',
+            border: '2px solid #9333ea'
+          } : {}}
+          data-purple={!product.is_sold ? "true" : "false"}
           whileHover={!product.is_sold ? { scale: 1.02 } : {}}
           whileTap={!product.is_sold ? { scale: 0.98 } : {}}
         >

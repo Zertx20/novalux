@@ -33,10 +33,10 @@ const AdminLogin: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="h-16 w-16 rounded-full gold-gradient flex items-center justify-center mx-auto mb-4">
+          <div className="h-16 w-16 rounded-full purple-gradient flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl font-bold text-background font-heading">NL</span>
           </div>
-          <h1 className="text-2xl font-heading font-bold gold-text">{t('admin')}</h1>
+          <h1 className="text-2xl font-heading font-bold purple-text">{t('admin')}</h1>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4 bg-card p-6 rounded-lg border border-border">
@@ -51,7 +51,7 @@ const AdminLogin: React.FC = () => {
               className="w-full mt-1 px-3 py-2 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
           </div>
           <button type="submit" disabled={loading}
-            className="w-full gold-gradient py-3 rounded-lg text-background font-semibold hover:opacity-90 transition-opacity disabled:opacity-50">
+            className="w-full purple-gradient py-3 rounded-lg text-background font-semibold hover:opacity-90 transition-opacity disabled:opacity-50">
             {loading ? '...' : t('login')}
           </button>
         </form>

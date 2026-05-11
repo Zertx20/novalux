@@ -63,7 +63,7 @@ const CartSlideOver: React.FC = () => {
             className="fixed top-0 end-0 z-50 h-full w-full max-w-lg bg-background/95 backdrop-blur-lg border-s border-border/50 luxury-shadow-lg flex flex-col"
           >
             <div className="flex items-center justify-between p-6 border-b border-border/50">
-              <h2 className="text-2xl font-heading font-bold gold-text">{t('your_cart')}</h2>
+              <h2 className="text-2xl font-heading font-bold purple-text">{t('your_cart')}</h2>
               <button 
                 onClick={() => setIsOpen(false)} 
                 className="p-4 rounded-full hover:bg-card/50 transition-all duration-300 text-muted-foreground hover:text-foreground hover-luxury luxury-glow"
@@ -75,7 +75,7 @@ const CartSlideOver: React.FC = () => {
             <div className="flex-1 overflow-y-auto p-6">
               {items.length === 0 ? (
                 <div className="text-center py-16">
-                  <div className="w-16 h-16 rounded-full gold-gradient/20 flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 rounded-full purple-gradient/20 flex items-center justify-center mx-auto mb-4">
                     <Trash2 size={32} className="text-muted-foreground" />
                   </div>
                   <p className="text-lg text-muted-foreground font-light">{t('empty_cart')}</p>
@@ -98,7 +98,7 @@ const CartSlideOver: React.FC = () => {
                       )}
                       <div className="flex-1">
                         <h4 className="font-semibold text-base text-foreground mb-1">{item.product.name}</h4>
-                        <p className="gold-text font-bold text-lg mb-3">
+                        <p className="purple-text font-bold text-lg mb-3">
                           {item.product.new_price.toFixed(0)} {t('currency')}
                         </p>
                         <div className="flex items-center gap-3">
@@ -170,7 +170,7 @@ const CartSlideOver: React.FC = () => {
                   <button 
                     type="submit" 
                     disabled={submitting}
-                    className="w-full gold-gradient py-4 rounded-xl text-background font-semibold hover-luxury luxury-shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                    className="w-full purple-gradient py-4 rounded-xl text-background font-semibold hover-luxury luxury-shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
                   >
                     {submitting ? '...' : t('place_order')}
                   </button>
@@ -182,12 +182,12 @@ const CartSlideOver: React.FC = () => {
               <div className="p-6 border-t border-border/50 bg-card/30 backdrop-blur-sm">
                 <div className="flex justify-between mb-6">
                   <span className="font-heading font-bold text-xl text-foreground">{t('total')}</span>
-                  <span className="font-bold text-2xl gold-text">{total.toFixed(0)} {t('currency')}</span>
+                  <span className="font-bold text-2xl purple-text">{total.toFixed(0)} {t('currency')}</span>
                 </div>
                 {!showCheckout ? (
                   <button 
                     onClick={() => setShowCheckout(true)}
-                    className="w-full gold-gradient py-4 rounded-xl text-background font-semibold hover-luxury luxury-shadow-lg hover:scale-[1.02] transition-all duration-300 text-lg"
+                    className="w-full purple-gradient py-4 rounded-xl text-background font-semibold hover-luxury luxury-shadow-lg hover:scale-[1.02] transition-all duration-300 text-lg"
                   >
                     {t('checkout')}
                   </button>

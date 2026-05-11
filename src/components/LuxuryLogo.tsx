@@ -24,11 +24,11 @@ const LuxuryLogo: React.FC = () => {
         } : {})
       }}
     >
-      {/* Gold glow effect */}
+      {/* Purple glow effect */}
       <motion.div
         className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(198, 167, 94, 0.3) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%)',
           filter: 'blur(20px)',
           transform: 'scale(1.3)',
           zIndex: 5,
@@ -64,7 +64,7 @@ const LuxuryLogo: React.FC = () => {
       
       {/* Logo container with circular luxury styling */}
       <motion.div
-        className="relative rounded-full overflow-hidden luxury-shadow-lg hover-luxury border-2 border-transparent group-hover:border-gold/30 transition-all duration-300"
+        className="relative rounded-full overflow-hidden luxury-shadow-lg hover-luxury border-2 border-transparent group-hover:border-purple/30 transition-all duration-300"
         whileHover={{ 
           scale: 1.05,
           transition: { duration: 0.3, ease: "easeOut" }
@@ -104,7 +104,7 @@ const LuxuryLogo: React.FC = () => {
 
       {/* Floating particles for luxury effect */}
       <motion.div
-        className="absolute -top-1 -right-1 w-2 h-2 rounded-full gold-gradient opacity-60"
+        className="absolute -top-1 -right-1 w-2 h-2 rounded-full purple-gradient opacity-60"
         animate={{
           scale: [1, 1.3, 1],
           opacity: [0.6, 1, 0.6],
@@ -116,7 +116,7 @@ const LuxuryLogo: React.FC = () => {
         }}
       />
       <motion.div
-        className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full gold-gradient opacity-40"
+        className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full purple-gradient opacity-40"
         animate={{
           scale: [1, 1.4, 1],
           opacity: [0.4, 0.8, 0.4],
@@ -131,7 +131,7 @@ const LuxuryLogo: React.FC = () => {
 
       {/* Rotating ring effect */}
       <motion.div
-        className="absolute inset-0 rounded-full border border-gold/20"
+        className="absolute inset-0 rounded-full border border-purple/20"
         style={{
           width: '64px',
           height: '64px',

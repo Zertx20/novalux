@@ -329,7 +329,7 @@ const Admin: React.FC = () => {
                       <span className="text-sm">{t('mark_sold')}</span>
                     </label>
                     <div className="flex gap-2 pt-2">
-                      <button type="submit" disabled={saving} className="flex-1 gold-gradient py-2 rounded-lg text-background font-medium hover:opacity-90 transition-opacity disabled:opacity-50">
+                      <button type="submit" disabled={saving} className="flex-1 purple-gradient py-2 rounded-lg text-background font-medium hover:opacity-90 transition-opacity disabled:opacity-50">
                         {saving ? '...' : t('save')}
                       </button>
                       <button type="button" onClick={() => setShowForm(false)} className="flex-1 bg-secondary py-2 rounded-lg text-secondary-foreground font-medium hover:bg-muted transition-colors">
@@ -409,7 +409,7 @@ const Admin: React.FC = () => {
                       <div className="flex gap-1">
                         {(['pending', 'confirmed', 'cancelled'] as const).map(status => (
                           <button key={status} onClick={() => updateOrderStatus(order.id, status)}
-                            className={`px-3 py-1 rounded text-xs font-medium transition-colors ${order.status === status ? 'gold-gradient text-background' : 'bg-secondary text-secondary-foreground hover:bg-muted'}`}>
+                            className={`px-3 py-1 rounded text-xs font-medium transition-colors ${order.status === status ? 'purple-gradient text-background' : 'bg-secondary text-secondary-foreground hover:bg-muted'}`}>
                             {t(status)}
                           </button>
                         ))}

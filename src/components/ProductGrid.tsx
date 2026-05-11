@@ -34,10 +34,10 @@ const ProductGrid: React.FC = () => {
   return (
     <section id="products" className="container mx-auto px-6 py-24">
       <div className="text-center mb-16">
-        <h2 className="text-4xl md:text-5xl font-heading font-bold gold-text mb-4">
+        <h2 className="text-4xl md:text-5xl font-heading font-bold purple-text mb-4">
           {t('products')}
         </h2>
-        <div className="w-24 h-0.5 gold-gradient mx-auto rounded-full" />
+        <div className="w-24 h-0.5 purple-gradient mx-auto rounded-full" />
       </div>
       {products.length === 0 ? (
         <div className="text-center py-16">

@@ -15,7 +15,7 @@
     --popover: 45 25% 100%;
     --popover-foreground: 30 15% 10%;
 
-    --primary: 38 75% 55%;
+    --primary: 271 76% 53%;
     --primary-foreground: 45 25% 97%;
 
     --secondary: 45 20% 95%;
@@ -24,7 +24,7 @@
     --muted: 45 15% 92%;
     --muted-foreground: 30 8% 45%;
 
-    --accent: 38 75% 55%;
+    --accent: 271 76% 53%;
     --accent-foreground: 45 25% 97%;
 
     --destructive: 0 72% 51%;
@@ -32,7 +32,7 @@
 
     --border: 45 15% 88%;
     --input: 45 15% 88%;
-    --ring: 38 75% 55%;
+    --ring: 271 76% 53%;
 
     --radius: 0.75rem;
 
@@ -87,7 +87,7 @@
 
     --border: 30 8% 18%;
     --input: 30 8% 18%;
-    --ring: 38 75% 55%;
+    --ring: 271 76% 53%;
 
     --gold: 38 75% 55%;
     --gold-light: 38 80% 70%;
@@ -136,6 +136,10 @@
 }
 
 @layer utilities {
+  .gold-gradient {
+    background: linear-gradient(135deg, #f59e0b, #f97316, #fb923c);
+  }
+
   .purple-gradient {
     background: linear-gradient(135deg, #6b46c1, #9333ea, #a855f7);
   }
@@ -150,7 +154,7 @@
   }
 
   .gold-text {
-    background: linear-gradient(135deg, #6b46c1, #9333ea, #a855f7);
+    background: linear-gradient(135deg, #f59e0b, #f97316, #fb923c);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -167,11 +171,18 @@
   }
 
   .purple-button-solid {
-    background-color: #6b46c1;
-    color: white;
-    box-shadow: 0 8px 25px rgba(107, 33, 168, 0.4);
-    border: 1px solid #9333ea;
+    background-color: #9333ea !important;
+    color: white !important;
+    box-shadow: 0 8px 25px rgba(147, 51, 234, 0.4);
+    border: 1px solid #9333ea !important;
     outline: 2px solid transparent;
+  }
+
+  /* Force purple button for product cards */
+  button[data-purple="true"] {
+    background-color: #9333ea !important;
+    color: white !important;
+    border: none !important;
   }
 
   .purple-shadow-lg {
@@ -189,5 +200,9 @@
   .hover-luxury:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 30px -8px hsl(var(--purple) / 0.25);
+  }
+
+  .mt-screen {
+    margin-top: 100vh;
   }
 }
