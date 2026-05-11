@@ -11,7 +11,7 @@ const CartSlideOver: React.FC = () => {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, total, clearCart } = useCart();
   const [showCheckout, setShowCheckout] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [form, setForm] = useState({ customer_name: '', phone: '', address: '', delivery_type: 'home' });
+  const [form, setForm] = useState({ customer_name: '', phone: '', address: '', delivery_type: 'home', wilaya: '' });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,15 +157,93 @@ const CartSlideOver: React.FC = () => {
                     />
                   </div>
                   <div>
+                    <label className="text-sm font-medium text-muted-foreground mb-2 block">Wilaya</label>
+                    <div className="relative">
+                      <select 
+                        value={form.wilaya || ''} 
+                        onChange={e => setForm(p => ({ ...p, wilaya: e.target.value }))}
+                        className="w-full px-4 py-3 bg-black border-2 border-purple/30 rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-purple/50 focus:border-purple/50 transition-all duration-300 appearance-none cursor-pointer hover:border-purple/50 hover:shadow-lg"
+                      >
+                        <option value="">Sélectionnez...</option>
+                        <option value="Adrar">Adrar</option>
+                        <option value="Chlef">Chlef</option>
+                        <option value="Laghouat">Laghouat</option>
+                        <option value="Oum El Bouaghi">Oum El Bouaghi</option>
+                        <option value="Batna">Batna</option>
+                        <option value="Béjaïa">Béjaïa</option>
+                        <option value="Biskra">Biskra</option>
+                        <option value="Béchar">Béchar</option>
+                        <option value="Blida">Blida</option>
+                        <option value="Bouira">Bouira</option>
+                        <option value="Tamanrasset">Tamanrasset</option>
+                        <option value="Tébessa">Tébessa</option>
+                        <option value="Tlemcen">Tlemcen</option>
+                        <option value="Tiaret">Tiaret</option>
+                        <option value="Tizi Ouzou">Tizi Ouzou</option>
+                        <option value="Alger">Alger</option>
+                        <option value="Djelfa">Djelfa</option>
+                        <option value="Jijel">Jijel</option>
+                        <option value="Sétif">Sétif</option>
+                        <option value="Saïda">Saïda</option>
+                        <option value="Skikda">Skikda</option>
+                        <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
+                        <option value="Annaba">Annaba</option>
+                        <option value="Guelma">Guelma</option>
+                        <option value="Constantine">Constantine</option>
+                        <option value="Médéa">Médéa</option>
+                        <option value="Mostaganem">Mostaganem</option>
+                        <option value="M'Sila">M'Sila</option>
+                        <option value="Mascara">Mascara</option>
+                        <option value="Ouargla">Ouargla</option>
+                        <option value="Oran">Oran</option>
+                        <option value="El Bayadh">El Bayadh</option>
+                        <option value="Illizi">Illizi</option>
+                        <option value="Bordj Bou Arréridj">Bordj Bou Arréridj</option>
+                        <option value="Boumerdès">Boumerdès</option>
+                        <option value="El Tarf">El Tarf</option>
+                        <option value="Tindouf">Tindouf</option>
+                        <option value="Tissemsilt">Tissemsilt</option>
+                        <option value="El Oued">El Oued</option>
+                        <option value="Khenchela">Khenchela</option>
+                        <option value="Souk Ahras">Souk Ahras</option>
+                        <option value="Tipaza">Tipaza</option>
+                        <option value="Mila">Mila</option>
+                        <option value="Aïn Defla">Aïn Defla</option>
+                        <option value="Naâma">Naâma</option>
+                        <option value="Aïn Témouchent">Aïn Témouchent</option>
+                        <option value="Ghardaïa">Ghardaïa</option>
+                        <option value="Relizane">Relizane</option>
+                        <option value="Timimoun">Timimoun</option>
+                        <option value="Bordj Badji Mokhtar">Bordj Badji Mokhtar</option>
+                        <option value="Ouled Djellal">Ouled Djellal</option>
+                        <option value="Béni Abbès">Béni Abbès</option>
+                        <option value="In Salah">In Salah</option>
+                        <option value="In Guezzam">In Guezzam</option>
+                        <option value="Touggourt">Touggourt</option>
+                        <option value="Djanet">Djanet</option>
+                        <option value="El M'Ghair">El M'Ghair</option>
+                        <option value="El Meniaa">El Meniaa</option>
+                      </select>
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                        <span className="text-purple-500">▼</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
                     <label className="text-sm font-medium text-muted-foreground mb-2 block">{t('delivery_type')}</label>
-                    <select 
-                      value={form.delivery_type} 
-                      onChange={e => setForm(p => ({ ...p, delivery_type: e.target.value }))}
-                      className="w-full px-4 py-3 bg-card/50 backdrop-blur-sm border border-border/30 rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300"
-                    >
-                      <option value="home">{t('home_delivery')}</option>
-                      <option value="office">{t('office_delivery')}</option>
-                    </select>
+                    <div className="relative">
+                      <select 
+                        value={form.delivery_type} 
+                        onChange={e => setForm(p => ({ ...p, delivery_type: e.target.value }))}
+                        className="w-full px-4 py-3 bg-black border-2 border-purple/30 rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-purple/50 focus:border-purple/50 transition-all duration-300 appearance-none cursor-pointer hover:border-purple/50 hover:shadow-lg"
+                      >
+                        <option value="home" className="text-purple-700">🏠 {t('home_delivery')}</option>
+                        <option value="office" className="text-purple-700">🏢 {t('office_delivery')}</option>
+                      </select>
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                        <span className="text-purple-500">▼</span>
+                      </div>
+                    </div>
                   </div>
                   <button 
                     type="submit" 
@@ -181,7 +259,7 @@ const CartSlideOver: React.FC = () => {
             {items.length > 0 && (
               <div className="p-6 border-t border-border/50 bg-card/30 backdrop-blur-sm">
                 <div className="flex justify-between mb-6">
-                  <span className="font-heading font-bold text-xl text-foreground">{t('total')}</span>
+                  <span className="font-heading font-bold text-xl text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>{t('total')}</span>
                   <span className="font-bold text-2xl purple-text">{total.toFixed(0)} {t('currency')}</span>
                 </div>
                 {!showCheckout ? (

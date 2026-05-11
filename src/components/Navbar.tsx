@@ -27,8 +27,8 @@ const Navbar: React.FC = () => {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
       scrolled 
-        ? 'bg-black/0.1 shadow-md border-b border-gray-800/10'
-        : 'bg-background/0.1 border-b border-border/5'
+        ? 'bg-background/80 backdrop-blur-lg shadow-lg border-b border-border/20'
+        : 'bg-background/60 backdrop-blur-md border-b border-border/10'
     } luxury-shadow`}>
       <div className="container mx-auto px-6 h-20 flex items-center">
         {/* Left - Logo */}
@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-2xl font-heading font-bold purple-text hidden lg:block tracking-wide"
+            className="text-2xl font-heading font-bold purple-text hidden lg:block tracking-tight"
           >
             {t('brand')}
           </motion.span>
@@ -49,7 +49,7 @@ const Navbar: React.FC = () => {
           <div className="hidden lg:flex items-center gap-8">
             <NavLink 
               to="/" 
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 hover:tracking-wide relative group"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 hover:tracking-tight relative group"
             >
               {t('home')}
               <motion.div
@@ -78,7 +78,7 @@ const Navbar: React.FC = () => {
               <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute top-0 right-0 h-5 w-5 min-w-[20px] rounded-full purple-gradient text-primary-foreground text-[11px] flex items-center justify-center font-bold shadow-md luxury-shadow"
+                className="absolute top-0 right-0 h-5 w-5 min-w-[20px] rounded-full purple-gradient text-primary-foreground text-[11px] flex items-center justify-center font-semibold shadow-lg luxury-shadow"
                 style={{ transform: 'translate(35%, -35%)' }}
                 whileHover={{ scale: 1.1 }}
               >

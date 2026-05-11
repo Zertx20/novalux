@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import heroBg from '@/assets/Prime_Sport_Store_cover_banner_202605081638.jpeg';
+import heroBg from '@/assets/Sports_e-commerce_hero_background_202605120006.jpeg';
 import softModeBg from '@/assets/Make_background_and_202602212023.jpeg';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -24,7 +24,7 @@ const HeroSection: React.FC = () => {
           alt="Prime Sport Store DZ" 
           className="w-full h-full object-cover scale-105" 
           style={{ 
-            filter: 'blur(3px)',
+            filter: 'blur(1px)',
             boxShadow: 'inset 0 -50px 50px rgba(0, 0, 0, 0.7)'
           }}
           loading="lazy" 
@@ -38,15 +38,15 @@ const HeroSection: React.FC = () => {
           transition={{ duration: 1.2, ease: "easeOut" }}
           className="mb-12"
         >
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-black leading-tight mb-8 tracking-wider">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-tight mb-8 tracking-tight">
             <motion.span 
               className="inline purple-text"
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: "easeOut" }}
-              style={{ textShadow: '0 0 20px rgba(147, 51, 234, 0.3)' }}
+              style={{ textShadow: '0 0 30px rgba(0, 0, 0, 0.8)' }}
             >
-              PRIME SPORT STORE DZ
+              Prime Sport Store DZ
             </motion.span>
           </h1>
         </motion.div>
@@ -55,10 +55,10 @@ const HeroSection: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
-          className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white mb-16 font-semibold leading-relaxed max-w-3xl mx-auto tracking-wide"
-          style={{ textShadow: '0 0 15px rgba(147, 51, 234, 0.5)' }}
+          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white mb-16 font-medium leading-relaxed max-w-4xl mx-auto tracking-normal"
+          style={{ textShadow: '0 0 20px rgba(0, 0, 0, 0.8)' }}
         >
-          Tous les Équipements et Accessoires Sportifs
+          Premium Sports Equipment & Accessories
         </motion.p>
 
         <motion.div
@@ -69,22 +69,22 @@ const HeroSection: React.FC = () => {
         >
           <motion.button
             onClick={scrollToProducts}
-            className="px-12 py-4 rounded-xl text-white font-bold text-lg hover-luxury luxury-shadow-lg hover:scale-105 transition-all duration-300 relative overflow-hidden group purple-button-solid"
+            className="px-10 py-4 rounded-2xl text-white font-semibold text-lg hover-luxury luxury-shadow-lg hover:scale-105 transition-all duration-300 relative overflow-hidden group purple-button-solid"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             {t('shop_now')}
           </motion.button>
           <motion.div 
-            className="text-sm text-white font-medium flex items-center gap-3"
+            className="text-base text-white/90 font-medium flex items-center gap-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1 }}
           >
             <motion.span
-              className="purple-text"
+              className="purple-text text-lg"
               animate={{
-                opacity: [0.5, 1, 0.5],
+                opacity: [0.6, 1, 0.6],
               }}
               transition={{
                 duration: 3,
@@ -92,13 +92,13 @@ const HeroSection: React.FC = () => {
                 ease: "easeInOut"
               }}
             >
-              ✦
+              ◆
             </motion.span>
-            Premium Sports Equipment
+            <span>Elite Sports Gear</span>
             <motion.span
-              className="purple-text"
+              className="purple-text text-lg"
               animate={{
-                opacity: [0.5, 1, 0.5],
+                opacity: [0.6, 1, 0.6],
               }}
               transition={{
                 duration: 3,
@@ -107,7 +107,7 @@ const HeroSection: React.FC = () => {
                 delay: 1.5
               }}
             >
-              ✦
+              ◆
             </motion.span>
           </motion.div>
         </motion.div>

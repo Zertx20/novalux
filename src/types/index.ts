@@ -22,6 +22,7 @@ export interface Order {
   phone: string;
   address: string;
   delivery_type: string;
+  wilaya?: string;
   items: CartItem[];
   total_price: number;
   status: string;

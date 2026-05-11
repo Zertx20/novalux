@@ -31,7 +31,8 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: index * 0.15, ease: "easeOut" }}
-      className="group bg-black rounded-2xl border border-border/20 overflow-hidden hover-luxury fade-in relative luxury-glow"
+      className="group bg-black backdrop-blur-sm rounded-2xl border-2 border-purple-500/50 overflow-hidden hover-luxury fade-in relative luxury-glow"
+      style={{ boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)' }}
       whileHover={{ 
         y: -8,
         transition: { duration: 0.3, ease: "easeOut" }
@@ -39,10 +40,10 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
     >
       {/* Purple glow effect on hover */}
       <motion.div
-        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none z-10"
+        className="absolute inset-0 rounded-2xl opacity-60 group-hover:opacity-100 pointer-events-none z-10"
         style={{
-          background: 'radial-gradient(circle at center, rgba(147, 51, 234, 0.15) 0%, transparent 70%)',
-          filter: 'blur(25px)',
+          background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.3) 0%, transparent 70%)',
+          filter: 'blur(20px)',
         }}
       />
       
@@ -70,14 +71,15 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
 
       <div className="p-6 relative z-10">
         <motion.h3 
-          className="font-heading font-semibold text-xl text-foreground mb-3 leading-tight group-hover:text-primary transition-colors duration-300"
+          className="font-heading font-semibold text-xl text-white mb-3 leading-tight group-hover:text-primary transition-colors duration-300"
+          style={{ fontFamily: 'Arial, sans-serif' }}
           whileHover={{ x: 4 }}
         >
           {product.name}
         </motion.h3>
         {product.description && (
           <motion.p 
-            className="text-sm text-muted-foreground mb-5 line-clamp-2 leading-relaxed font-light"
+            className="text-sm text-gray-300 mb-5 line-clamp-2 leading-relaxed font-light"
             initial={{ opacity: 0.7 }}
             whileHover={{ opacity: 1 }}
           >
@@ -88,7 +90,7 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
         <div className="flex items-center gap-4 mb-7">
           {product.old_price && (
             <motion.span 
-              className="text-sm text-muted-foreground line-through font-light"
+              className="text-sm text-gray-400 line-through font-light"
               initial={{ opacity: 0.6 }}
               whileHover={{ opacity: 1 }}
             >
@@ -97,6 +99,7 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
           )}
           <motion.span 
             className="text-2xl font-bold purple-text"
+            style={{ fontFamily: 'Arial, sans-serif' }}
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
           >
@@ -114,8 +117,8 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
           }`}
           style={!product.is_sold ? {
             backgroundColor: 'white',
-            color: '#9333ea',
-            border: '2px solid #9333ea'
+            color: '#8b5cf6',
+            border: '2px solid #8b5cf6'
           } : {}}
           data-purple={!product.is_sold ? "true" : "false"}
           whileHover={!product.is_sold ? { scale: 1.02 } : {}}

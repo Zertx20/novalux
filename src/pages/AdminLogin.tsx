@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import logo from '@/assets/Prime_Sport_Store_logo_design_202605081633.jpeg';
 
 const AdminLogin: React.FC = () => {
   const { t } = useTranslation();
@@ -33,20 +34,20 @@ const AdminLogin: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="h-16 w-16 rounded-full purple-gradient flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl font-bold text-background font-heading">NL</span>
+          <div className="h-16 w-16 rounded-full overflow-hidden flex items-center justify-center mx-auto mb-4">
+            <img src={logo} alt="Nova Lux Logo" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-heading font-bold purple-text">{t('admin')}</h1>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4 bg-card p-6 rounded-lg border border-border">
+        <form onSubmit={handleLogin} className="space-y-4 bg-black p-6 rounded-lg border-2 border-purple-500/50">
           <div>
-            <label className="text-sm font-medium text-muted-foreground">{t('email')}</label>
+            <label className="text-sm font-medium text-white">{t('email')}</label>
             <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
               className="w-full mt-1 px-3 py-2 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
           </div>
           <div>
-            <label className="text-sm font-medium text-muted-foreground">{t('password')}</label>
+            <label className="text-sm font-medium text-white">{t('password')}</label>
             <input type="password" required value={password} onChange={e => setPassword(e.target.value)}
               className="w-full mt-1 px-3 py-2 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
           </div>

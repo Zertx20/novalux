@@ -8,6 +8,7 @@ import type { Product, Order } from '@/types';
 import { toast } from 'sonner';
 import { LogOut, Plus, Pencil, Trash2, Package, ShoppingBag, X } from 'lucide-react';
 import type { Session } from '@supabase/supabase-js';
+import logo from '@/assets/Prime_Sport_Store_logo_design_202605081633.jpeg';
 
 const emptyProduct = { name: '', description: '', old_price: '', new_price: '', category: '', is_sold: false };
 
@@ -194,8 +195,8 @@ const Admin: React.FC = () => {
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full purple-gradient flex items-center justify-center">
-              <span className="text-xs font-bold text-background font-heading">NL</span>
+            <div className="h-8 w-8 rounded-full overflow-hidden flex items-center justify-center">
+              <img src={logo} alt="Nova Lux Logo" className="w-full h-full object-cover" />
             </div>
             <h1 className="font-heading font-bold text-lg purple-text">{t('admin')}</h1>
           </div>
@@ -214,11 +215,11 @@ const Admin: React.FC = () => {
         {/* Tabs */}
         <div className="flex gap-2 mb-6">
           <button onClick={() => setTab('products')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === 'products' ? 'purple-gradient text-background' : 'bg-secondary text-secondary-foreground hover:bg-muted'}`}>
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all border-2 ${tab === 'products' ? 'bg-black border-purple-500/50 text-white' : 'bg-black border-purple-500/30 text-gray-300 hover:border-purple-500/50'}`}>
             <Package size={16} /> {t('product_management')}
           </button>
           <button onClick={() => setTab('orders')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === 'orders' ? 'purple-gradient text-background' : 'bg-secondary text-secondary-foreground hover:bg-muted'}`}>
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all border-2 ${tab === 'orders' ? 'bg-black border-purple-500/50 text-white' : 'bg-black border-purple-500/30 text-gray-300 hover:border-purple-500/50'}`}>
             <ShoppingBag size={16} /> {t('order_management')}
           </button>
         </div>
@@ -347,12 +348,12 @@ const Admin: React.FC = () => {
             ) : (
               <div className="space-y-3">
                 {products.map(product => (
-                  <div key={product.id} className="flex items-center gap-4 bg-card border border-border rounded-lg p-4">
+                  <div key={product.id} className="flex items-center gap-4 bg-black border-2 border-purple-500/50 rounded-lg p-4">
                     {product.image_url && (
                       <img src={product.image_url} alt={product.name} className="w-16 h-16 rounded object-cover" />
                     )}
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium truncate">{product.name}</h4>
+                      <h4 className="font-medium truncate text-white">{product.name}</h4>
                       <p className="text-sm text-primary font-bold">{product.new_price.toFixed(0)} {t('currency')}</p>
                       {product.is_sold && <span className="text-xs text-destructive">{t('sold_out')}</span>}
                     </div>
@@ -380,13 +381,18 @@ const Admin: React.FC = () => {
             ) : (
               <div className="space-y-4">
                 {orders.map(order => (
-                  <div key={order.id} className="bg-card border border-border rounded-lg p-4">
+                  <div key={order.id} className="bg-black border-2 border-purple-500/50 rounded-lg p-4">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h4 className="font-medium">{order.customer_name}</h4>
-                        <p className="text-sm text-muted-foreground">{order.phone}</p>
-                        <p className="text-sm text-muted-foreground">{order.address}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{order.delivery_type === 'home' ? t('home_delivery') : t('office_delivery')}</p>
+                        <h4 className="font-medium text-white">{order.customer_name}</h4>
+                        <p className="text-sm text-gray-300">{order.phone}</p>
+                        <p className="text-sm text-gray-300">{order.address}</p>
+                        {order.wilaya && (
+                          <p className="text-sm text-gray-300">
+                            <span className="font-medium">Wilaya:</span> {order.wilaya}
+                          </p>
+                        )}
+                        <p className="text-xs text-gray-400 mt-1">{order.delivery_type === 'home' ? t('home_delivery') : t('office_delivery')}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || ''}`}>
@@ -398,7 +404,7 @@ const Admin: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="text-sm text-muted-foreground mb-3">
+                    <div className="text-sm text-gray-300 mb-3">
                       {Array.isArray(order.items) && order.items.map((item: any, i: number) => (
                         <span key={i}>{item.name} x{item.quantity}{i < order.items.length - 1 ? ', ' : ''}</span>
                       ))}
