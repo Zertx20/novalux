@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import logo from '@/assets/nova-lux-logo.jpeg';
+import logo from '@/assets/Prime_Sport_Store_logo_design_202605081633.jpeg';
 
 const LuxuryLogo: React.FC = () => {
   const isRTL = false; // Replace with your actual RTL detection logic
@@ -94,7 +94,7 @@ const LuxuryLogo: React.FC = () => {
         {/* Logo image - circular */}
         <img
           src={logo}
-          alt="Nova Lux"
+          alt="Prime Sport Store DZ"
           className="w-full h-full object-cover rounded-full relative z-10"
           style={{
             filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))',

@@ -3,13 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Minus, Plus, Trash2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { useLanguage } from '@/hooks/useLanguage';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const CartSlideOver: React.FC = () => {
   const { t } = useTranslation();
-  const { currentLang } = useLanguage();
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, total, clearCart } = useCart();
   const [showCheckout, setShowCheckout] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -58,9 +56,9 @@ const CartSlideOver: React.FC = () => {
             onClick={() => setIsOpen(false)}
           />
           <motion.div
-            initial={{ x: currentLang === 'ar' ? '-100%' : '100%' }}
+            initial={{ x: '100%' }}
             animate={{ x: 0 }}
-            exit={{ x: currentLang === 'ar' ? '-100%' : '100%' }}
+            exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed top-0 end-0 z-50 h-full w-full max-w-lg bg-background/95 backdrop-blur-lg border-s border-border/50 luxury-shadow-lg flex flex-col"
           >

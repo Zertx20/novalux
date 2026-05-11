@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useProducts } from '@/hooks/useProducts';
 import { useOrders } from '@/hooks/useOrders';
-import { useLanguage } from '@/hooks/useLanguage';
 import type { Product, Order } from '@/types';
 import { toast } from 'sonner';
 import { LogOut, Plus, Pencil, Trash2, Package, ShoppingBag, X } from 'lucide-react';
@@ -15,7 +14,6 @@ const emptyProduct = { name: '', description: '', old_price: '', new_price: '', 
 const Admin: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isRTL } = useLanguage();
   const { products, loading: productsLoading } = useProducts();
   const { orders, loading: ordersLoading } = useOrders();
   const [session, setSession] = useState<Session | null>(null);
@@ -185,21 +183,21 @@ const Admin: React.FC = () => {
   if (!session) return null;
 
   const statusColors: Record<string, string> = {
-    pending: 'bg-gold/20 text-gold-dark',
+    pending: 'bg-purple/20 text-purple-200',
     confirmed: 'bg-green-500/20 text-green-700 dark:text-green-400',
     cancelled: 'bg-destructive/20 text-destructive',
   };
 
   return (
-    <div className="min-h-screen bg-background" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-background" dir="ltr">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full gold-gradient flex items-center justify-center">
+            <div className="h-8 w-8 rounded-full purple-gradient flex items-center justify-center">
               <span className="text-xs font-bold text-background font-heading">NL</span>
             </div>
-            <h1 className="font-heading font-bold text-lg gold-text">{t('admin')}</h1>
+            <h1 className="font-heading font-bold text-lg purple-text">{t('admin')}</h1>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => navigate('/')} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -216,11 +214,11 @@ const Admin: React.FC = () => {
         {/* Tabs */}
         <div className="flex gap-2 mb-6">
           <button onClick={() => setTab('products')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === 'products' ? 'gold-gradient text-background' : 'bg-secondary text-secondary-foreground hover:bg-muted'}`}>
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === 'products' ? 'purple-gradient text-background' : 'bg-secondary text-secondary-foreground hover:bg-muted'}`}>
             <Package size={16} /> {t('product_management')}
           </button>
           <button onClick={() => setTab('orders')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === 'orders' ? 'gold-gradient text-background' : 'bg-secondary text-secondary-foreground hover:bg-muted'}`}>
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === 'orders' ? 'purple-gradient text-background' : 'bg-secondary text-secondary-foreground hover:bg-muted'}`}>
             <ShoppingBag size={16} /> {t('order_management')}
           </button>
         </div>
@@ -230,7 +228,7 @@ const Admin: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-4">
               <h2 className="font-heading text-2xl font-bold">{t('products')}</h2>
-              <button onClick={openNew} className="flex items-center gap-2 gold-gradient px-4 py-2 rounded-lg text-background text-sm font-medium hover:opacity-90 transition-opacity">
+              <button onClick={openNew} className="flex items-center gap-2 purple-gradient px-4 py-2 rounded-lg text-background text-sm font-medium hover:opacity-90 transition-opacity">
                 <Plus size={16} /> {t('add_product')}
               </button>
             </div>

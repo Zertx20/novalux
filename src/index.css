@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -41,6 +41,11 @@
     --gold-dark: 38 65% 40%;
     --gold-muted: 38 25% 85%;
 
+    --purple: 271 76% 53%;
+    --purple-light: 271 76% 65%;
+    --purple-dark: 271 76% 40%;
+    --purple-muted: 271 76% 25%;
+
     --sidebar-background: 30 10% 95%;
     --sidebar-foreground: 30 10% 20%;
     --sidebar-primary: 40 65% 50%;
@@ -50,9 +55,9 @@
     --sidebar-border: 30 15% 88%;
     --sidebar-ring: 40 65% 50%;
 
-    --font-heading: 'Playfair Display', serif;
-    --font-body: 'Inter', sans-serif;
-    --font-arabic: 'Noto Kufi Arabic', sans-serif;
+    --font-heading: 'Oswald', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+    --font-arabic: 'Roboto', sans-serif;
   }
 
   .dark {
@@ -65,7 +70,7 @@
     --popover: 30 8% 8%;
     --popover-foreground: 45 25% 95%;
 
-    --primary: 38 75% 55%;
+    --primary: 271 76% 53%;
     --primary-foreground: 30 8% 6%;
 
     --secondary: 30 8% 15%;
@@ -74,7 +79,7 @@
     --muted: 30 8% 15%;
     --muted-foreground: 45 15% 60%;
 
-    --accent: 38 75% 55%;
+    --accent: 271 76% 53%;
     --accent-foreground: 30 8% 6%;
 
     --destructive: 0 72% 51%;
@@ -88,6 +93,11 @@
     --gold-light: 38 80% 70%;
     --gold-dark: 38 65% 40%;
     --gold-muted: 38 15% 20%;
+
+    --purple: 271 76% 53%;
+    --purple-light: 271 76% 65%;
+    --purple-dark: 271 76% 40%;
+    --purple-muted: 271 76% 20%;
 
     --sidebar-background: 30 8% 8%;
     --sidebar-foreground: 45 25% 90%;
@@ -126,27 +136,46 @@
 }
 
 @layer utilities {
-  .gold-gradient {
-    background: linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)));
+  .purple-gradient {
+    background: linear-gradient(135deg, #6b46c1, #9333ea, #a855f7);
   }
 
-  .gold-text {
-    background: linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)));
+  .purple-text {
+    background: linear-gradient(135deg, #6b46c1, #9333ea, #a855f7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
   }
 
-  .gold-border {
-    border-color: hsl(var(--gold) / 0.3);
+  .gold-text {
+    background: linear-gradient(135deg, #6b46c1, #9333ea, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
   }
 
-  .luxury-shadow {
-    box-shadow: 0 4px 20px -4px hsl(var(--gold) / 0.15);
+  .purple-border {
+    border-color: #9333ea;
   }
 
-  .luxury-shadow-lg {
-    box-shadow: 0 10px 40px -10px hsl(var(--gold) / 0.2);
+  .purple-shadow {
+    box-shadow: 0 4px 20px -4px rgba(147, 51, 234, 0.15);
+  }
+
+  .purple-button-solid {
+    background-color: #6b46c1;
+    color: white;
+    box-shadow: 0 8px 25px rgba(107, 33, 168, 0.4);
+    border: 1px solid #9333ea;
+    outline: 2px solid transparent;
+  }
+
+  .purple-shadow-lg {
+    box-shadow: 0 10px 40px -10px hsl(var(--purple) / 0.2);
   }
 
   .fade-in {
@@ -159,6 +188,6 @@
 
   .hover-luxury:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px -8px hsl(var(--gold) / 0.25);
+    box-shadow: 0 8px 30px -8px hsl(var(--purple) / 0.25);
   }
 }
