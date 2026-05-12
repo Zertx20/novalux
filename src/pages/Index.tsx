@@ -9,7 +9,7 @@ const Index: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen luxury-glow">
+    <div className="min-h-screen bg-black">
       <Navbar />
       <HeroSection />
       <ProductGrid />
