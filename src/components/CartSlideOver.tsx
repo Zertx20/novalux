@@ -60,7 +60,7 @@ const CartSlideOver: React.FC = () => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 end-0 z-50 h-full w-full max-w-lg bg-background/95 backdrop-blur-lg border-s border-border/50 luxury-shadow-lg flex flex-col"
+            className="fixed top-0 end-0 z-50 h-full w-full max-w-lg bg-black backdrop-blur-lg border-2 border-purple-500/50 luxury-shadow-lg flex flex-col"
           >
             <div className="flex items-center justify-between p-6 border-b border-border/50">
               <h2 className="text-2xl font-heading font-bold purple-text">{t('your_cart')}</h2>
@@ -87,7 +87,7 @@ const CartSlideOver: React.FC = () => {
                       key={item.product.id}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="flex gap-4 bg-card/50 backdrop-blur-sm rounded-2xl p-4 border border-border/30 hover-luxury"
+                      className="flex gap-4 bg-black/50 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/30 hover-luxury"
                     >
                       {item.product.image_url && (
                         <img 
@@ -97,21 +97,21 @@ const CartSlideOver: React.FC = () => {
                         />
                       )}
                       <div className="flex-1">
-                        <h4 className="font-semibold text-base text-foreground mb-1">{item.product.name}</h4>
+                        <h4 className="font-semibold text-base text-white mb-1">{item.product.name}</h4>
                         <p className="purple-text font-bold text-lg mb-3">
                           {item.product.new_price.toFixed(0)} {t('currency')}
                         </p>
                         <div className="flex items-center gap-3">
                           <button 
                             onClick={() => updateQuantity(item.product.id, item.quantity - 1)} 
-                            className="p-2 bg-card rounded-xl hover:bg-muted transition-all duration-300 hover-luxury"
+                            className="p-2 bg-black rounded-xl hover:bg-gray-800 transition-all duration-300 hover-luxury border border-purple-500/30"
                           >
                             <Minus size={16} />
                           </button>
-                          <span className="text-base font-medium w-8 text-center">{item.quantity}</span>
+                          <span className="text-base font-medium w-8 text-center text-white">{item.quantity}</span>
                           <button 
                             onClick={() => updateQuantity(item.product.id, item.quantity + 1)} 
-                            className="p-2 bg-card rounded-xl hover:bg-muted transition-all duration-300 hover-luxury"
+                            className="p-2 bg-black rounded-xl hover:bg-gray-800 transition-all duration-300 hover-luxury border border-purple-500/30"
                           >
                             <Plus size={16} />
                           </button>
@@ -257,9 +257,9 @@ const CartSlideOver: React.FC = () => {
             </div>
 
             {items.length > 0 && (
-              <div className="p-6 border-t border-border/50 bg-card/30 backdrop-blur-sm">
+              <div className="p-6 border-t border-purple-500/30 bg-black/50 backdrop-blur-sm">
                 <div className="flex justify-between mb-6">
-                  <span className="font-heading font-bold text-xl text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>{t('total')}</span>
+                  <span className="font-heading font-bold text-xl text-white" style={{ fontFamily: 'Arial, sans-serif' }}>{t('total')}</span>
                   <span className="font-bold text-2xl purple-text">{total.toFixed(0)} {t('currency')}</span>
                 </div>
                 {!showCheckout ? (
@@ -272,7 +272,7 @@ const CartSlideOver: React.FC = () => {
                 ) : (
                   <button 
                     onClick={() => setShowCheckout(false)}
-                    className="w-full bg-card/50 backdrop-blur-sm py-4 rounded-xl text-foreground font-medium hover:bg-card transition-all duration-300 border border-border/30 text-lg"
+                    className="w-full bg-black py-4 rounded-xl text-white font-medium hover:bg-gray-800 transition-all duration-300 border border-purple-500/30 text-lg"
                   >
                     {t('cancel')}
                   </button>
