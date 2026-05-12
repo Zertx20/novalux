@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import heroBg from '@/assets/Sports_e-commerce_hero_background_202605120006.jpeg';
+import heroBgMobile from '@/assets/Sports_e-commerce_hero_mobile_202605120123.jpeg';
 import softModeBg from '@/assets/Make_background_and_202602212023.jpeg';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -19,16 +20,19 @@ const HeroSection: React.FC = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden luxury-pattern">
       <div className="absolute inset-0">
-        <img 
-          src={heroBg} 
-          alt="Prime Sport Store DZ" 
-          className="w-full h-full object-cover scale-105" 
-          style={{ 
-            filter: 'blur(1px)',
-            boxShadow: 'inset 0 -50px 50px rgba(0, 0, 0, 0.7)'
-          }}
-          loading="lazy" 
-        />
+        <picture>
+          <source media="(max-width: 768px)" srcSet={heroBgMobile} />
+          <img 
+            src={heroBg} 
+            alt="Prime Sport Store DZ" 
+            className="w-full h-full object-cover scale-105" 
+            style={{ 
+              filter: 'blur(1px)',
+              boxShadow: 'inset 0 -50px 50px rgba(0, 0, 0, 0.7)'
+            }}
+            loading="lazy" 
+          />
+        </picture>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent/30 to-background/90" />
       </div>
       <div className="relative z-10 text-center px-6 max-w-5xl mx-auto luxury-glow">
