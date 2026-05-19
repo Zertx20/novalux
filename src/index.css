@@ -416,4 +416,12 @@ textarea.form-input {
     transform: scale(1.02);
   }
 }
+
+/* Mobile hero section - reduce height */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 55vh !important;
+    padding-top: 70px !important;
+    padding-bottom: 20px !important;
+  }
 }

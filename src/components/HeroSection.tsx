@@ -18,7 +18,7 @@ const HeroSection: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden luxury-pattern pt-20">
+    <section className="hero-section relative flex items-center justify-center overflow-hidden luxury-pattern" style={{ minHeight: '100vh' }}>
       <div className="absolute inset-0">
         <picture>
           <source media="(max-width: 768px)" srcSet={heroBgMobile} />
@@ -36,10 +36,12 @@ const HeroSection: React.FC = () => {
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="mb-12 flex flex-col items-center gap-6"
+          className="mb-6 md:mb-12 flex flex-col items-center gap-4 md:gap-6"
         >
-          <LuxuryLogo />
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-tight tracking-tight whitespace-nowrap">
+          <div className="w-16 h-16 md:w-24 md:h-24">
+            <LuxuryLogo />
+          </div>
+          <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-bold leading-tight tracking-tight whitespace-nowrap">
             <motion.span 
               className="inline text-white"
               initial={{ opacity: 0, y: 60 }}
@@ -56,7 +58,7 @@ const HeroSection: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
-          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-16 font-medium leading-relaxed max-w-4xl mx-auto tracking-normal"
+          className="text-sm sm:text-xl md:text-3xl lg:text-4xl mb-8 md:mb-16 font-medium leading-relaxed max-w-4xl mx-auto tracking-normal"
           style={{ color: '#C4B5FD', textShadow: '0 0 20px rgba(0, 0, 0, 0.8)' }}
         >
           {t('hero_subtitle')}
@@ -66,18 +68,18 @@ const HeroSection: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-          className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+          className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center"
         >
           <motion.button
             onClick={scrollToProducts}
-            className="hero-cta-button"
+            className="hero-cta-button px-5 py-2 md:px-8 md:py-4 text-sm md:text-base rounded-xl"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             {t('shop_now')}
           </motion.button>
           <motion.div 
-            className="pill-badge text-base font-medium flex items-center gap-2"
+            className="pill-badge text-sm md:text-base font-medium flex items-center gap-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1 }}
@@ -87,12 +89,12 @@ const HeroSection: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Decorative elements */}
+      {/* Decorative elements - scroll indicator hidden on mobile */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.8 }}
         transition={{ duration: 2, delay: 1.5 }}
-        className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
+        className="hidden md:flex absolute bottom-12 left-1/2 transform -translate-x-1/2"
       >
         <div className="flex flex-col items-center text-muted-foreground">
           <span className="text-xs font-medium tracking-widest uppercase mb-3 opacity-70">مرر للاكتشاف</span>
