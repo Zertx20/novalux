@@ -60,7 +60,6 @@ export type Database = {
           is_sold: boolean
           name: string
           new_price: number
-          old_price: number | null
         }
         Insert: {
           category?: string | null
@@ -71,7 +70,6 @@ export type Database = {
           is_sold?: boolean
           name: string
           new_price: number
-          old_price?: number | null
         }
         Update: {
           category?: string | null
@@ -82,7 +80,6 @@ export type Database = {
           is_sold?: boolean
           name?: string
           new_price?: number
-          old_price?: number | null
         }
         Relationships: []
       }

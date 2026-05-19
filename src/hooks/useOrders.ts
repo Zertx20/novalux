@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import type { Order } from '@/types';
+import type { Order, OrderItem } from '@/types';
 
 export const useOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -8,7 +8,7 @@ export const useOrders = () => {
 
   const fetchOrders = async () => {
     const { data } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
-    if (data) setOrders(data.map(o => ({ ...o, items: o.items as any })) as Order[]);
+    if (data) setOrders(data.map(o => ({ ...o, items: o.items as unknown as OrderItem[] })) as Order[]);
     setLoading(false);
   };
 

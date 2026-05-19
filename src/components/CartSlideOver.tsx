@@ -27,7 +27,7 @@ const CartSlideOver: React.FC = () => {
 
     const { error } = await supabase.from('orders').insert({
       ...form,
-      items: orderItems as any,
+      items: orderItems,
       total_price: total,
       status: 'pending',
     });
@@ -40,7 +40,7 @@ const CartSlideOver: React.FC = () => {
       clearCart();
       setShowCheckout(false);
       setIsOpen(false);
-      setForm({ customer_name: '', phone: '', address: '', delivery_type: 'home' });
+      setForm({ customer_name: '', phone: '', address: '', delivery_type: 'home', wilaya: '' });
     }
   };
 
@@ -99,7 +99,7 @@ const CartSlideOver: React.FC = () => {
                       <div className="flex-1">
                         <h4 className="font-semibold text-base text-white mb-1">{item.product.name}</h4>
                         <p className="purple-text font-bold text-lg mb-3">
-                          {item.product.new_price.toFixed(0)} {t('currency')}
+                          <span dir="ltr">{t('currency')}</span> {item.product.new_price.toFixed(0)}
                         </p>
                         <div className="flex items-center gap-3">
                           <button 
@@ -260,7 +260,7 @@ const CartSlideOver: React.FC = () => {
               <div className="p-6 border-t border-purple-500/30 bg-black/50 backdrop-blur-sm">
                 <div className="flex justify-between mb-6">
                   <span className="font-heading font-bold text-xl text-white" style={{ fontFamily: 'Arial, sans-serif' }}>{t('total')}</span>
-                  <span className="font-bold text-2xl purple-text">{total.toFixed(0)} {t('currency')}</span>
+                  <span className="font-bold text-2xl purple-text"><span dir="ltr">{t('currency')}</span> {total.toFixed(0)}</span>
                 </div>
                 {!showCheckout ? (
                   <button 

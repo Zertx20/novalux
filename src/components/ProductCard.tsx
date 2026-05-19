@@ -1,9 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ShoppingCart } from 'lucide-react';
 import type { Product } from '@/types';
-import { useCart } from '@/context/CartContext';
 import ImageSlider from './ImageSlider';
 
 interface Props {
@@ -13,7 +12,6 @@ interface Props {
 
 const ProductCard: React.FC<Props> = ({ product, index }) => {
   const { t } = useTranslation();
-  const { addItem } = useCart();
 
   // Get all images - use new image_urls array or fallback to single image_url
   const getAllImages = (): string[] => {
@@ -27,125 +25,150 @@ const ProductCard: React.FC<Props> = ({ product, index }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: index * 0.15, ease: "easeOut" }}
-      className="group bg-black backdrop-blur-sm rounded-2xl border-2 border-purple-500/50 overflow-hidden hover-luxury fade-in relative luxury-glow"
-      style={{ boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)' }}
-      whileHover={{ 
-        y: -8,
-        transition: { duration: 0.3, ease: "easeOut" }
-      }}
-    >
-      {/* Purple glow effect on hover */}
+    <Link to={`/product/${product.id}`} className="block">
       <motion.div
-        className="absolute inset-0 rounded-2xl opacity-60 group-hover:opacity-100 pointer-events-none z-10"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: index * 0.1 }}
+        className="product-card"
         style={{
-          background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.3) 0%, transparent 70%)',
-          filter: 'blur(20px)',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '380px',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          border: '1px solid rgba(139,92,246,0.2)',
+          background: 'linear-gradient(135deg, rgba(26, 26, 38, 0.8), rgba(17, 17, 24, 0.9))'
         }}
-      />
-      
-      <div className="relative">
-        <ImageSlider 
-          images={getAllImages()} 
-          alt={product.name}
-          className="w-full"
-        />
-        {product.is_sold && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-            className="absolute top-4 start-4 bg-destructive/90 backdrop-blur-sm text-destructive-foreground px-5 py-2 rounded-full text-xs font-bold tracking-wide shadow-lg z-10"
-          >
-            {t('sold_out')}
-          </motion.div>
-        )}
-        {/* Luxury overlay on hover */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10"
-        />
-      </div>
-
-      <div className="p-6 relative z-10">
-        <motion.h3 
-          className="font-heading font-semibold text-xl text-white mb-3 leading-tight group-hover:text-primary transition-colors duration-300"
-          style={{ fontFamily: 'Arial, sans-serif' }}
-          whileHover={{ x: 4 }}
+        whileHover={{ 
+          y: -6,
+          transition: { duration: 0.3 }
+        }}
+      >
+        {/* Image - fixed height */}
+        <div 
+          className="product-image-wrapper"
+          style={{
+            width: '100%',
+            height: '260px',
+            flexShrink: 0,
+            overflow: 'hidden',
+            position: 'relative'
+          }}
         >
-          {product.name}
-        </motion.h3>
-        {product.description && (
-          <motion.p 
-            className="text-sm text-gray-300 mb-5 line-clamp-2 leading-relaxed font-light"
-            initial={{ opacity: 0.7 }}
-            whileHover={{ opacity: 1 }}
-          >
-            {product.description}
-          </motion.p>
-        )}
-
-        <div className="flex items-center gap-4 mb-7">
-          {product.old_price && (
-            <motion.span 
-              className="text-sm text-gray-400 line-through font-light"
-              initial={{ opacity: 0.6 }}
-              whileHover={{ opacity: 1 }}
-            >
-              {product.old_price.toFixed(0)} {t('currency')}
-            </motion.span>
+          {getAllImages().length > 1 ? (
+            <ImageSlider images={getAllImages()} alt={product.name} />
+          ) : (
+            <>
+              {getAllImages().length > 0 ? (
+                <img 
+                  src={getAllImages()[0]} 
+                  alt={product.name}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                    display: 'block'
+                  }}
+                />
+              ) : (
+                <div style={{
+                  width: '100%',
+                  height: '100%',
+                  background: 'rgba(26, 26, 38, 0.5)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <span style={{ color: '#9B99B8' }}>لا توجد صورة</span>
+                </div>
+              )}
+              {product.is_sold && (
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'rgba(0, 0, 0, 0.6)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <span style={{ color: 'white', fontWeight: 'bold', fontSize: '18px' }}>
+                    {t('sold_out')}
+                  </span>
+                </div>
+              )}
+            </>
           )}
-          <motion.span 
-            className="text-2xl font-bold purple-text"
-            style={{ fontFamily: 'Arial, sans-serif' }}
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
-          >
-            {product.new_price.toFixed(0)} {t('currency')}
-          </motion.span>
         </div>
 
-        <motion.button
-          onClick={() => !product.is_sold && addItem(product)}
-          disabled={product.is_sold}
-          className={`w-full py-4 rounded-xl font-medium text-base transition-all duration-300 relative overflow-hidden group ${
-            product.is_sold
-              ? 'bg-muted/30 text-muted-foreground cursor-not-allowed border border-border/20'
-              : 'font-semibold shadow-lg'
-          }`}
-          style={!product.is_sold ? {
-            backgroundColor: 'white',
-            color: '#8b5cf6',
-            border: '2px solid #8b5cf6'
-          } : {}}
-          data-purple={!product.is_sold ? "true" : "false"}
-          whileHover={!product.is_sold ? { scale: 1.02 } : {}}
-          whileTap={!product.is_sold ? { scale: 0.98 } : {}}
+        {/* Info label - always visible */}
+        <div 
+          style={{
+            flex: 1,
+            flexShrink: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            padding: '12px 14px',
+            background: 'rgba(15, 10, 30, 0.75)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            borderTop: '1px solid rgba(139,92,246,0.15)',
+            minHeight: '120px'
+          }}
         >
-          {/* Shimmer effect for available products */}
+          <h3 style={{ 
+            color: '#F1F0FF', 
+            fontSize: '14px', 
+            fontWeight: 600, 
+            margin: 0,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            lineHeight: '1.4'
+          }}>
+            {product.name}
+          </h3>
+          
           {!product.is_sold && (
-            <motion.div
-              className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500"
-              style={{
-                background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%)',
-              }}
-              animate={{
-                x: ['-100%', '100%'],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatDelay: 3,
-                ease: "easeInOut"
-              }}
-            />
+            <>
+              <div style={{ 
+                color: '#A78BFA', 
+                fontSize: '13px', 
+                fontWeight: 700,
+                marginBottom: '8px'
+              }}>
+                <span dir="ltr">{t('currency')}</span> {product.new_price.toFixed(0)}
+              </div>
+
+              <motion.button
+                style={{
+                  background: 'linear-gradient(135deg, #7C3AED, #8B5CF6)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  padding: '10px',
+                  width: '100%',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease',
+                  boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)',
+                  marginTop: 'auto'
+                }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {t('order_now')}
+              </motion.button>
+            </>
           )}
-          {product.is_sold ? t('sold_out') : t('add_to_cart')}
-        </motion.button>
-      </div>
-    </motion.div>
+        </div>
+      </motion.div>
+    </Link>
   );
 };
 

@@ -4,13 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useProducts } from '@/hooks/useProducts';
 import { useOrders } from '@/hooks/useOrders';
-import type { Product, Order } from '@/types';
+import type { Product, Order, OrderItem } from '@/types';
 import { toast } from 'sonner';
 import { LogOut, Plus, Pencil, Trash2, Package, ShoppingBag, X } from 'lucide-react';
 import type { Session } from '@supabase/supabase-js';
 import logo from '@/assets/Prime_Sport_Store_logo_design_202605081633.jpeg';
+import AnimatedBackground from '@/components/AnimatedBackground';
 
-const emptyProduct = { name: '', description: '', old_price: '', new_price: '', category: '', is_sold: false };
+const emptyProduct = { name: '', description: '', new_price: '', category: '', is_sold: false };
 
 const Admin: React.FC = () => {
   const { t } = useTranslation();
@@ -49,12 +50,10 @@ const Admin: React.FC = () => {
     setForm({
       name: product.name,
       description: product.description || '',
-      old_price: product.old_price?.toString() || '',
       new_price: product.new_price.toString(),
       category: product.category || '',
       is_sold: product.is_sold,
     });
-    // Set existing images for editing
     if (product.image_urls && product.image_urls.length > 0) {
       setImagePreviewUrls(product.image_urls);
     } else if (product.image_url) {
@@ -101,18 +100,14 @@ const Admin: React.FC = () => {
     }
 
     setImageFiles(prev => [...prev, ...validFiles]);
-    
-    // Create preview URLs for new files
     const newPreviewUrls = validFiles.map(file => URL.createObjectURL(file));
     setImagePreviewUrls(prev => [...prev, ...newPreviewUrls]);
   };
 
   const removeImage = (index: number) => {
-    // Revoke object URL to avoid memory leaks
     if (index < imageFiles.length) {
       URL.revokeObjectURL(imagePreviewUrls[index]);
     }
-    
     setImageFiles(prev => prev.filter((_, i) => i !== index));
     setImagePreviewUrls(prev => prev.filter((_, i) => i !== index));
   };
@@ -127,7 +122,6 @@ const Admin: React.FC = () => {
     e.preventDefault();
     setSaving(true);
 
-    // Upload new images if any
     let newImageUrls: string[] = [];
     if (imageFiles.length > 0) {
       newImageUrls = await uploadImages(imageFiles);
@@ -137,18 +131,16 @@ const Admin: React.FC = () => {
       }
     }
 
-    // Separate existing URLs from new object URLs
     const existingImageUrls = imagePreviewUrls.slice(0, imagePreviewUrls.length - imageFiles.length);
     const allImageUrls = [...existingImageUrls, ...newImageUrls];
 
     const payload = {
       name: form.name,
       description: form.description || null,
-      old_price: form.old_price ? parseFloat(form.old_price) : null,
       new_price: parseFloat(form.new_price),
       category: form.category || null,
       is_sold: form.is_sold,
-      image_url: allImageUrls.length > 0 ? allImageUrls[0] : null, // Keep for backward compatibility
+      image_url: allImageUrls.length > 0 ? allImageUrls[0] : null,
       image_urls: allImageUrls,
     };
 
@@ -183,252 +175,803 @@ const Admin: React.FC = () => {
 
   if (!session) return null;
 
-  const statusColors: Record<string, string> = {
-    pending: 'bg-purple/20 text-purple-200',
-    confirmed: 'bg-green-500/20 text-green-700 dark:text-green-400',
-    cancelled: 'bg-destructive/20 text-destructive',
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return {
+          background: 'rgba(234,179,8,0.15)',
+          border: '1px solid rgba(234,179,8,0.3)',
+          color: '#FCD34D'
+        };
+      case 'confirmed':
+        return {
+          background: 'rgba(34,197,94,0.15)',
+          border: '1px solid rgba(34,197,94,0.3)',
+          color: '#86EFAC'
+        };
+      case 'cancelled':
+        return {
+          background: 'rgba(239,68,68,0.15)',
+          border: '1px solid rgba(239,68,68,0.3)',
+          color: '#FCA5A5'
+        };
+      default:
+        return {
+          background: 'rgba(139,92,246,0.15)',
+          border: '1px solid rgba(139,92,246,0.3)',
+          color: '#A78BFA'
+        };
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'pending': return 'قيد الانتظار';
+      case 'confirmed': return 'مؤكد';
+      case 'cancelled': return 'ملغي';
+      default: return status;
+    }
+  };
+
+  const getDeliveryTypeLabel = (type: string) => {
+    return type === 'home' ? 'توصيل للمنزل' : 'توصيل للمكتب';
   };
 
   return (
-    <div className="min-h-screen bg-background" dir="ltr">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full overflow-hidden flex items-center justify-center">
-              <img src={logo} alt="Nova Lux Logo" className="w-full h-full object-cover" />
-            </div>
-            <h1 className="font-heading font-bold text-lg purple-text">{t('admin')}</h1>
+    <>
+      <AnimatedBackground />
+      <div style={{
+        background: 'transparent',
+        minHeight: '100vh',
+        position: 'relative',
+        zIndex: 1
+      }}>
+        {/* Admin Navbar */}
+        <nav style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100,
+          background: 'rgba(10, 10, 15, 0.75)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(139, 92, 246, 0.2)',
+          padding: '0 24px',
+          height: '64px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          {/* Left — logo + title */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <img 
+              src={logo} 
+              alt="Logo" 
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                filter: 'drop-shadow(0 0 8px rgba(139,92,246,0.6))'
+              }} 
+            />
+            <span style={{
+              color: '#F1F0FF',
+              fontSize: '18px',
+              fontWeight: 700,
+              fontFamily: 'Cairo'
+            }}>لوحة التحكم</span>
           </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => navigate('/')} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              <ShoppingBag size={16} /> {t('go_to_website')}
+
+          {/* Right — nav links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <a
+              onClick={() => navigate('/')}
+              style={{
+                color: '#9B99B8',
+                fontSize: '14px',
+                fontWeight: 500,
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'color 0.2s',
+                cursor: 'pointer',
+                fontFamily: 'Cairo'
+              }}
+              onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = '#A78BFA'}
+              onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = '#9B99B8'}
+            >
+              🌐 الذهاب للموقع
+            </a>
+            <a
+              onClick={handleLogout}
+              style={{
+                color: '#9B99B8',
+                fontSize: '14px',
+                fontWeight: 500,
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+                fontFamily: 'Cairo'
+              }}
+            >
+              🚪 تسجيل الخروج
+            </a>
+          </div>
+        </nav>
+
+        {/* Page content */}
+        <div style={{
+          background: 'transparent',
+          minHeight: '100vh',
+          paddingTop: '80px',
+          paddingLeft: '24px',
+          paddingRight: '24px',
+          paddingBottom: '40px'
+        }}>
+          {/* Tabs */}
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+            <button
+              onClick={() => setTab('products')}
+              style={{
+                background: tab === 'products' 
+                  ? 'linear-gradient(135deg, rgba(109,40,217,0.4), rgba(139,92,246,0.3))' 
+                  : 'rgba(26, 26, 38, 0.6)',
+                backdropFilter: 'blur(10px)',
+                border: tab === 'products' 
+                  ? '1px solid rgba(139, 92, 246, 0.5)' 
+                  : '1px solid rgba(139, 92, 246, 0.2)',
+                borderRadius: '12px',
+                color: tab === 'products' ? '#F1F0FF' : '#9B99B8',
+                padding: '10px 20px',
+                fontSize: '14px',
+                fontWeight: tab === 'products' ? 700 : 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.2s',
+                fontFamily: 'Cairo',
+                boxShadow: tab === 'products' ? '0 0 16px rgba(139,92,246,0.3)' : 'none'
+              }}
+            >
+              <Package size={16} />
+              إدارة المنتجات
             </button>
-            <button onClick={handleLogout} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              <LogOut size={16} /> {t('logout')}
+            <button
+              onClick={() => setTab('orders')}
+              style={{
+                background: tab === 'orders' 
+                  ? 'linear-gradient(135deg, rgba(109,40,217,0.4), rgba(139,92,246,0.3))' 
+                  : 'rgba(26, 26, 38, 0.6)',
+                backdropFilter: 'blur(10px)',
+                border: tab === 'orders' 
+                  ? '1px solid rgba(139, 92, 246, 0.5)' 
+                  : '1px solid rgba(139, 92, 246, 0.2)',
+                borderRadius: '12px',
+                color: tab === 'orders' ? '#F1F0FF' : '#9B99B8',
+                padding: '10px 20px',
+                fontSize: '14px',
+                fontWeight: tab === 'orders' ? 700 : 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.2s',
+                fontFamily: 'Cairo',
+                boxShadow: tab === 'orders' ? '0 0 16px rgba(139,92,246,0.3)' : 'none'
+              }}
+            >
+              <ShoppingBag size={16} />
+              إدارة الطلبات
             </button>
           </div>
-        </div>
-      </header>
 
-      <main className="container mx-auto px-4 py-6">
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6">
-          <button onClick={() => setTab('products')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all border-2 ${tab === 'products' ? 'bg-black border-purple-500/50 text-white' : 'bg-black border-purple-500/30 text-gray-300 hover:border-purple-500/50'}`}>
-            <Package size={16} /> {t('product_management')}
-          </button>
-          <button onClick={() => setTab('orders')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all border-2 ${tab === 'orders' ? 'bg-black border-purple-500/50 text-white' : 'bg-black border-purple-500/30 text-gray-300 hover:border-purple-500/50'}`}>
-            <ShoppingBag size={16} /> {t('order_management')}
-          </button>
-        </div>
+          {/* Products Tab */}
+          {tab === 'products' && (
+            <div>
+              {/* Section header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <h2 style={{
+                  color: '#F1F0FF',
+                  fontSize: '22px',
+                  fontWeight: 800,
+                  fontFamily: 'Cairo',
+                  margin: 0,
+                  background: 'linear-gradient(135deg, #F1F0FF, #A78BFA)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}>إدارة المنتجات</h2>
+                
+                <button
+                  onClick={openNew}
+                  style={{
+                    background: 'linear-gradient(135deg, #6D28D9, #8B5CF6)',
+                    border: 'none',
+                    borderRadius: '12px',
+                    color: 'white',
+                    padding: '12px 24px',
+                    fontSize: '15px',
+                    fontWeight: 700,
+                    fontFamily: 'Cairo',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    boxShadow: '0 0 20px rgba(139,92,246,0.4)',
+                    transition: 'all 0.25s'
+                  }}
+                >
+                  <Plus size={16} />
+                  إضافة منتج
+                </button>
+              </div>
 
-        {/* Products Tab */}
-        {tab === 'products' && (
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="font-heading text-2xl font-bold">{t('products')}</h2>
-              <button onClick={openNew} className="flex items-center gap-2 purple-gradient px-4 py-2 rounded-lg text-background text-sm font-medium hover:opacity-90 transition-opacity">
-                <Plus size={16} /> {t('add_product')}
-              </button>
-            </div>
-
-            {/* Product Form Modal */}
-            {showForm && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm p-4" onClick={() => setShowForm(false)}>
-                <div className="bg-background border border-border rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                  <h3 className="font-heading font-bold text-lg mb-4">{editing ? t('edit') : t('add_product')}</h3>
-                  <form onSubmit={handleSave} className="space-y-3">
-                    <div>
-                      <label className="text-sm text-muted-foreground">{t('product_name')}</label>
-                      <input required value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
-                        className="w-full mt-1 px-3 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-muted-foreground">{t('description')}</label>
-                      <textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
-                        className="w-full mt-1 px-3 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary" rows={2} />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
+              {/* Product Form Modal */}
+              {showForm && (
+                <div 
+                  style={{
+                    position: 'fixed',
+                    inset: 0,
+                    zIndex: 50,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(0,0,0,0.5)',
+                    backdropFilter: 'blur(4px)',
+                    padding: '20px'
+                  }}
+                  onClick={() => setShowForm(false)}
+                >
+                  <div
+                    style={{
+                      background: 'rgba(15, 10, 30, 0.95)',
+                      backdropFilter: 'blur(24px)',
+                      WebkitBackdropFilter: 'blur(24px)',
+                      border: '1px solid rgba(139, 92, 246, 0.25)',
+                      borderRadius: '20px',
+                      padding: '32px 28px',
+                      width: '100%',
+                      maxWidth: '540px',
+                      maxHeight: '90vh',
+                      overflowY: 'auto'
+                    }}
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <h3 style={{
+                      color: '#F1F0FF',
+                      fontSize: '20px',
+                      fontWeight: 700,
+                      marginBottom: '24px',
+                      fontFamily: 'Cairo'
+                    }}>{editing ? 'تعديل المنتج' : 'إضافة منتج جديد'}</h3>
+                    
+                    <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                       <div>
-                        <label className="text-sm text-muted-foreground">{t('old_price')}</label>
-                        <input type="number" step="0.01" value={form.old_price} onChange={e => setForm(p => ({ ...p, old_price: e.target.value }))}
-                          className="w-full mt-1 px-3 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
-                      </div>
-                      <div>
-                        <label className="text-sm text-muted-foreground">{t('new_price')}</label>
-                        <input required type="number" step="0.01" value={form.new_price} onChange={e => setForm(p => ({ ...p, new_price: e.target.value }))}
-                          className="w-full mt-1 px-3 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-sm text-muted-foreground">{t('category')}</label>
-                      <input value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
-                        className="w-full mt-1 px-3 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-muted-foreground">{t('upload_images')} (Max 5MB per image)</label>
-                      
-                      {/* Image Preview Grid */}
-                      {imagePreviewUrls.length > 0 && (
-                        <div className="mt-2 grid grid-cols-3 gap-2">
-                          {imagePreviewUrls.map((url, index) => (
-                            <div key={index} className="relative group">
-                              <img 
-                                src={url} 
-                                alt={`Preview ${index + 1}`}
-                                className="w-full h-20 object-cover rounded border border-border"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => removeImage(index)}
-                                className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <X size={12} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      
-                      {/* Upload Button */}
-                      <div className="mt-2">
-                        <input
-                          ref={fileRef}
-                          type="file"
-                          accept="image/*"
-                          multiple
-                          onChange={handleImageUpload}
-                          className="hidden"
+                        <label style={{
+                          color: '#9B99B8',
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          display: 'block',
+                          marginBottom: '6px',
+                          fontFamily: 'Cairo'
+                        }}>اسم المنتج</label>
+                        <input 
+                          required 
+                          value={form.name} 
+                          onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
+                          style={{
+                            width: '100%',
+                            background: 'rgba(26, 26, 38, 0.8)',
+                            border: '1px solid rgba(139, 92, 246, 0.25)',
+                            borderRadius: '12px',
+                            color: '#F1F0FF',
+                            padding: '14px 16px',
+                            fontSize: '15px',
+                            fontFamily: 'Cairo',
+                            outline: 'none'
+                          }}
                         />
-                        <button
-                          type="button"
-                          onClick={() => fileRef.current?.click()}
-                          className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-muted transition-colors text-sm"
-                        >
-                          {imagePreviewUrls.length > 0 ? 'Add More Images' : 'Select Images'}
-                        </button>
+                      </div>
+                      <div>
+                        <label style={{
+                          color: '#9B99B8',
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          display: 'block',
+                          marginBottom: '6px',
+                          fontFamily: 'Cairo'
+                        }}>الوصف</label>
+                        <textarea 
+                          value={form.description} 
+                          onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
+                          style={{
+                            width: '100%',
+                            background: 'rgba(26, 26, 38, 0.8)',
+                            border: '1px solid rgba(139, 92, 246, 0.25)',
+                            borderRadius: '12px',
+                            color: '#F1F0FF',
+                            padding: '14px 16px',
+                            fontSize: '15px',
+                            fontFamily: 'Cairo',
+                            outline: 'none',
+                            minHeight: '80px',
+                            resize: 'none'
+                          }}
+                          rows={2} 
+                        />
+                      </div>
+                      <div>
+                        <label style={{
+                          color: '#9B99B8',
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          display: 'block',
+                          marginBottom: '6px',
+                          fontFamily: 'Cairo'
+                        }}>السعر</label>
+                        <input 
+                          required 
+                          type="number" 
+                          step="0.01" 
+                          value={form.new_price} 
+                          onChange={e => setForm(p => ({ ...p, new_price: e.target.value }))}
+                          style={{
+                            width: '100%',
+                            background: 'rgba(26, 26, 38, 0.8)',
+                            border: '1px solid rgba(139, 92, 246, 0.25)',
+                            borderRadius: '12px',
+                            color: '#F1F0FF',
+                            padding: '14px 16px',
+                            fontSize: '15px',
+                            fontFamily: 'Cairo',
+                            outline: 'none'
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{
+                          color: '#9B99B8',
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          display: 'block',
+                          marginBottom: '6px',
+                          fontFamily: 'Cairo'
+                        }}>الفئة</label>
+                        <input 
+                          value={form.category} 
+                          onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
+                          style={{
+                            width: '100%',
+                            background: 'rgba(26, 26, 38, 0.8)',
+                            border: '1px solid rgba(139, 92, 246, 0.25)',
+                            borderRadius: '12px',
+                            color: '#F1F0FF',
+                            padding: '14px 16px',
+                            fontSize: '15px',
+                            fontFamily: 'Cairo',
+                            outline: 'none'
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{
+                          color: '#9B99B8',
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          display: 'block',
+                          marginBottom: '6px',
+                          fontFamily: 'Cairo'
+                        }}>صور المنتج (الحد الأقصى 5MB لكل صورة)</label>
+                        
                         {imagePreviewUrls.length > 0 && (
+                          <div style={{ marginTop: '12px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+                            {imagePreviewUrls.map((url, index) => (
+                              <div key={index} style={{ position: 'relative' }}>
+                                <img 
+                                  src={url} 
+                                  alt={`Preview ${index + 1}`}
+                                  style={{
+                                    width: '100%',
+                                    height: '80px',
+                                    objectFit: 'cover',
+                                    borderRadius: '10px',
+                                    border: '1px solid rgba(139,92,246,0.2)'
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removeImage(index)}
+                                  style={{
+                                    position: 'absolute',
+                                    top: '4px',
+                                    right: '4px',
+                                    background: 'rgba(239,68,68,0.9)',
+                                    border: 'none',
+                                    borderRadius: '50%',
+                                    width: '24px',
+                                    height: '24px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    color: 'white'
+                                  }}
+                                >
+                                  <X size={12} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
+                        <div style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
+                          <input
+                            ref={fileRef}
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handleImageUpload}
+                            style={{ display: 'none' }}
+                          />
                           <button
                             type="button"
-                            onClick={clearAllImages}
-                            className="ml-2 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors text-sm"
+                            onClick={() => fileRef.current?.click()}
+                            style={{
+                              padding: '10px 20px',
+                              background: 'rgba(139,92,246,0.15)',
+                              border: '1px solid rgba(139,92,246,0.3)',
+                              borderRadius: '10px',
+                              color: '#A78BFA',
+                              cursor: 'pointer',
+                              fontSize: '14px',
+                              fontWeight: 600,
+                              fontFamily: 'Cairo',
+                              transition: 'all 0.2s'
+                            }}
                           >
-                            Clear All
+                            {imagePreviewUrls.length > 0 ? 'إضافة المزيد' : 'اختر الصور'}
                           </button>
+                          {imagePreviewUrls.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={clearAllImages}
+                              style={{
+                                padding: '10px 20px',
+                                background: 'rgba(239,68,68,0.15)',
+                                border: '1px solid rgba(239,68,68,0.3)',
+                                borderRadius: '10px',
+                                color: '#FCA5A5',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                fontFamily: 'Cairo',
+                                transition: 'all 0.2s'
+                              }}
+                            >
+                              حذف الكل
+                            </button>
+                          )}
+                        </div>
+                        
+                        <p style={{ marginTop: '8px', fontSize: '13px', color: '#9B99B8', fontFamily: 'Cairo' }}>
+                          {imagePreviewUrls.length} صورة محددة
+                        </p>
+                      </div>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontFamily: 'Cairo' }}>
+                        <input 
+                          type="checkbox" 
+                          checked={form.is_sold} 
+                          onChange={e => setForm(p => ({ ...p, is_sold: e.target.checked }))}
+                          style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                        />
+                        <span style={{ fontSize: '14px', color: '#F1F0FF' }}>تحديد كمنتج تم بيعه</span>
+                      </label>
+                      <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
+                        <button 
+                          type="submit" 
+                          disabled={saving}
+                          style={{
+                            flex: 1,
+                            padding: '14px',
+                            background: 'linear-gradient(135deg, #6D28D9, #8B5CF6)',
+                            border: 'none',
+                            borderRadius: '12px',
+                            color: 'white',
+                            fontSize: '15px',
+                            fontWeight: 700,
+                            fontFamily: 'Cairo',
+                            cursor: saving ? 'not-allowed' : 'pointer',
+                            boxShadow: '0 0 20px rgba(139,92,246,0.4)',
+                            transition: 'all 0.25s',
+                            opacity: saving ? 0.5 : 1
+                          }}
+                        >
+                          {saving ? '...' : 'حفظ'}
+                        </button>
+                        <button 
+                          type="button" 
+                          onClick={() => setShowForm(false)}
+                          style={{
+                            flex: 1,
+                            padding: '14px',
+                            background: 'rgba(26, 26, 38, 0.8)',
+                            border: '1px solid rgba(139, 92, 246, 0.25)',
+                            borderRadius: '12px',
+                            color: '#9B99B8',
+                            fontSize: '15px',
+                            fontWeight: 700,
+                            fontFamily: 'Cairo',
+                            cursor: 'pointer',
+                            transition: 'all 0.25s'
+                          }}
+                        >
+                          إلغاء
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+
+              {/* Products List */}
+              {productsLoading ? (
+                <p style={{ color: '#9B99B8', fontFamily: 'Cairo' }}>جاري التحميل...</p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {products.map(product => (
+                    <div 
+                      key={product.id} 
+                      style={{
+                        background: 'rgba(15, 10, 30, 0.55)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(139, 92, 246, 0.15)',
+                        borderRadius: '16px',
+                        padding: '16px 20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '16px',
+                        transition: 'border-color 0.2s, box-shadow 0.2s'
+                      }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.borderColor = 'rgba(139,92,246,0.4)';
+                        e.currentTarget.style.boxShadow = '0 8px 24px rgba(139,92,246,0.15)';
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.borderColor = 'rgba(139,92,246,0.15)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    >
+                      {/* Product image */}
+                      {(product.image_url || (product.image_urls && product.image_urls[0])) && (
+                        <img 
+                          src={product.image_urls?.[0] || product.image_url} 
+                          alt={product.name} 
+                          style={{
+                            width: '64px',
+                            height: '64px',
+                            objectFit: 'cover',
+                            borderRadius: '10px',
+                            border: '1px solid rgba(139,92,246,0.2)',
+                            flexShrink: 0
+                          }} 
+                        />
+                      )}
+                      
+                      {/* Name + price */}
+                      <div style={{ flex: 1 }}>
+                        <p style={{ 
+                          color: '#F1F0FF', 
+                          fontWeight: 600, 
+                          fontSize: '15px', 
+                          margin: '0 0 4px',
+                          fontFamily: 'Cairo'
+                        }}>
+                          {product.name}
+                        </p>
+                        <span style={{
+                          background: 'rgba(139,92,246,0.15)',
+                          border: '1px solid rgba(139,92,246,0.3)',
+                          color: '#A78BFA',
+                          borderRadius: '8px',
+                          padding: '2px 10px',
+                          fontSize: '13px',
+                          fontWeight: 700,
+                          fontFamily: 'Cairo'
+                        }}>
+                          <span dir="ltr">{t('currency')}</span> {product.new_price.toFixed(0)}
+                        </span>
+                        {product.is_sold && (
+                          <span style={{
+                            marginLeft: '8px',
+                            background: 'rgba(239,68,68,0.15)',
+                            border: '1px solid rgba(239,68,68,0.3)',
+                            color: '#FCA5A5',
+                            borderRadius: '8px',
+                            padding: '2px 10px',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            fontFamily: 'Cairo'
+                          }}>
+                            تم البيع
+                          </span>
                         )}
                       </div>
-                      
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {imagePreviewUrls.length} image(s) selected
-                      </p>
-                    </div>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked={form.is_sold} onChange={e => setForm(p => ({ ...p, is_sold: e.target.checked }))}
-                        className="rounded border-border" />
-                      <span className="text-sm">{t('mark_sold')}</span>
-                    </label>
-                    <div className="flex gap-2 pt-2">
-                      <button type="submit" disabled={saving} className="flex-1 purple-gradient py-2 rounded-lg text-background font-medium hover:opacity-90 transition-opacity disabled:opacity-50">
-                        {saving ? '...' : t('save')}
-                      </button>
-                      <button type="button" onClick={() => setShowForm(false)} className="flex-1 bg-secondary py-2 rounded-lg text-secondary-foreground font-medium hover:bg-muted transition-colors">
-                        {t('cancel')}
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
 
-            {/* Products List */}
-            {productsLoading ? (
-              <p className="text-muted-foreground">{t('no_products')}</p>
-            ) : (
-              <div className="space-y-3">
-                {products.map(product => (
-                  <div key={product.id} className="flex items-center gap-4 bg-black border-2 border-purple-500/50 rounded-lg p-4">
-                    {product.image_url && (
-                      <img src={product.image_url} alt={product.name} className="w-16 h-16 rounded object-cover" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium truncate text-white">{product.name}</h4>
-                      <p className="text-sm text-primary font-bold">{product.new_price.toFixed(0)} {t('currency')}</p>
-                      {product.is_sold && <span className="text-xs text-destructive">{t('sold_out')}</span>}
-                    </div>
-                    <div className="flex gap-2">
-                      <button onClick={() => openEdit(product)} className="p-2 hover:bg-secondary rounded transition-colors text-muted-foreground hover:text-foreground">
+                      {/* Edit button */}
+                      <button 
+                        onClick={() => openEdit(product)}
+                        style={{
+                          background: 'rgba(139,92,246,0.15)',
+                          border: '1px solid rgba(139,92,246,0.3)',
+                          borderRadius: '10px',
+                          color: '#A78BFA',
+                          padding: '8px 12px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
                         <Pencil size={16} />
                       </button>
-                      <button onClick={() => deleteProduct(product.id)} className="p-2 hover:bg-destructive/10 rounded transition-colors text-destructive">
+
+                      {/* Delete button */}
+                      <button 
+                        onClick={() => deleteProduct(product.id)}
+                        style={{
+                          background: 'rgba(239,68,68,0.1)',
+                          border: '1px solid rgba(239,68,68,0.3)',
+                          borderRadius: '10px',
+                          color: '#F87171',
+                          padding: '8px 12px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
                         <Trash2 size={16} />
                       </button>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
-        {/* Orders Tab */}
-        {tab === 'orders' && (
-          <div>
-            <h2 className="font-heading text-xl font-bold mb-4">{t('order_management')}</h2>
-            {ordersLoading || orders.length === 0 ? (
-              <p className="text-muted-foreground">{t('no_orders')}</p>
-            ) : (
-              <div className="space-y-4">
-                {orders.map(order => (
-                  <div key={order.id} className="bg-black border-2 border-purple-500/50 rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h4 className="font-medium text-white">{order.customer_name}</h4>
-                        <p className="text-sm text-gray-300">{order.phone}</p>
-                        <p className="text-sm text-gray-300">{order.address}</p>
-                        {order.wilaya && (
-                          <p className="text-sm text-gray-300">
-                            <span className="font-medium">Wilaya:</span> {order.wilaya}
-                          </p>
-                        )}
-                        <p className="text-xs text-gray-400 mt-1">{order.delivery_type === 'home' ? t('home_delivery') : t('office_delivery')}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || ''}`}>
-                          {t(order.status as any)}
+          {/* Orders Tab */}
+          {tab === 'orders' && (
+            <div>
+              <h2 style={{
+                color: '#F1F0FF',
+                fontSize: '22px',
+                fontWeight: 800,
+                fontFamily: 'Cairo',
+                margin: '0 0 24px',
+                background: 'linear-gradient(135deg, #F1F0FF, #A78BFA)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>إدارة الطلبات</h2>
+              
+              {ordersLoading || orders.length === 0 ? (
+                <p style={{ color: '#9B99B8', fontFamily: 'Cairo' }}>لا توجد طلبات</p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {orders.map(order => (
+                    <div 
+                      key={order.id} 
+                      style={{
+                        background: 'rgba(15, 10, 30, 0.55)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(139, 92, 246, 0.15)',
+                        borderRadius: '16px',
+                        padding: '20px 24px'
+                      }}
+                    >
+                      {/* Top row — name + status badge */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                        <p style={{ 
+                          color: '#F1F0FF', 
+                          fontWeight: 700, 
+                          fontSize: '16px', 
+                          margin: 0,
+                          fontFamily: 'Cairo'
+                        }}>
+                          {order.customer_name}
+                        </p>
+
+                        {/* Status badge */}
+                        <span style={{
+                          ...getStatusStyle(order.status),
+                          borderRadius: '8px',
+                          padding: '4px 12px',
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          fontFamily: 'Cairo'
+                        }}>
+                          {getStatusLabel(order.status)}
                         </span>
-                        <button onClick={() => deleteOrder(order.id)} className="p-1 text-destructive hover:bg-destructive/10 rounded transition-colors">
-                          <Trash2 size={14} />
-                        </button>
                       </div>
-                    </div>
 
-                    <div className="text-sm text-gray-300 mb-3">
-                      {Array.isArray(order.items) && order.items.map((item: any, i: number) => (
-                        <span key={i}>{item.name} x{item.quantity}{i < order.items.length - 1 ? ', ' : ''}</span>
-                      ))}
-                    </div>
+                      {/* Customer details */}
+                      <p style={{ color: '#9B99B8', fontSize: '13px', margin: '0 0 4px', fontFamily: 'Cairo' }}>
+                        {order.phone}
+                      </p>
+                      <p style={{ color: '#9B99B8', fontSize: '13px', margin: '0 0 4px', fontFamily: 'Cairo' }}>
+                        {order.address}
+                      </p>
+                      <p style={{ color: '#9B99B8', fontSize: '13px', margin: '0 0 12px', fontFamily: 'Cairo' }}>
+                        ولاية: {order.wilaya} — {getDeliveryTypeLabel(order.delivery_type)}
+                      </p>
 
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary">{order.total_price.toFixed(0)} {t('currency')}</span>
-                      <div className="flex gap-1">
+                      {/* Product + total */}
+                      {Array.isArray(order.items) && order.items.length > 0 && (
+                        <p style={{ 
+                          color: '#C4B5FD', 
+                          fontSize: '14px', 
+                          margin: '0 0 4px',
+                          fontFamily: 'Cairo'
+                        }}>
+                          {order.items.map((item: OrderItem, i: number) => (
+                            <span key={i}>{item.name} x{item.quantity}{i < order.items.length - 1 ? ', ' : ''}</span>
+                          ))}
+                        </p>
+                      )}
+                      <p style={{
+                        color: '#A78BFA', 
+                        fontSize: '16px', 
+                        fontWeight: 700, 
+                        margin: '0 0 16px',
+                        fontFamily: 'Cairo'
+                      }}>
+                        <span dir="ltr">{t('currency')}</span> {order.total_price.toFixed(0)}
+                      </p>
+
+                      {/* Action buttons */}
+                      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
                         {(['pending', 'confirmed', 'cancelled'] as const).map(status => (
-                          <button key={status} onClick={() => updateOrderStatus(order.id, status)}
-                            className={`px-3 py-1 rounded text-xs font-medium transition-colors ${order.status === status ? 'purple-gradient text-background' : 'bg-secondary text-secondary-foreground hover:bg-muted'}`}>
-                            {t(status)}
+                          <button 
+                            key={status} 
+                            onClick={() => updateOrderStatus(order.id, status)}
+                            style={{
+                              background: order.status === status 
+                                ? getStatusStyle(status).background 
+                                : 'rgba(26, 26, 38, 0.6)',
+                              border: order.status === status 
+                                ? getStatusStyle(status).border 
+                                : '1px solid rgba(139, 92, 246, 0.2)',
+                              color: order.status === status 
+                                ? getStatusStyle(status).color 
+                                : '#9B99B8',
+                              borderRadius: '10px',
+                              padding: '8px 16px',
+                              fontSize: '13px',
+                              fontWeight: 600,
+                              fontFamily: 'Cairo',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s'
+                            }}
+                          >
+                            {getStatusLabel(status)}
                           </button>
                         ))}
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </main>
-    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 

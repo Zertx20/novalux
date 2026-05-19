@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useCart } from '@/context/CartContext';
 import { useTheme } from '@/context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NavLink } from './NavLink';
@@ -10,7 +9,6 @@ import LuxuryLogo from './LuxuryLogo';
 
 const Navbar: React.FC = () => {
   const { t } = useTranslation();
-  const { itemCount, setIsOpen } = useCart();
   const { theme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -25,87 +23,54 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
-      scrolled 
-        ? 'bg-background/80 backdrop-blur-lg shadow-lg border-b border-border/20'
-        : 'bg-background/60 backdrop-blur-md border-b border-border/10'
-    } luxury-shadow`}>
-      <div className="container mx-auto px-6 h-20 flex items-center">
-        {/* Left - Logo */}
-        <Link to="/" className="flex items-center gap-4 group">
-          <LuxuryLogo />
+    <nav 
+      dir="rtl" 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out navbar-transparent ${
+        scrolled ? 'scrolled' : ''
+      }`}
+    >
+      <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-3 group">
+          <motion.div
+            whileHover={{ filter: 'drop-shadow(0 0 8px rgba(139, 92, 246, 0.6))' }}
+            transition={{ duration: 0.3 }}
+          >
+            <LuxuryLogo />
+          </motion.div>
           <motion.span 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-2xl font-heading font-bold purple-text hidden lg:block tracking-tight"
+            className="text-xl font-heading font-bold text-white hidden lg:block tracking-tight whitespace-nowrap"
           >
             {t('brand')}
           </motion.span>
         </Link>
 
-        {/* Center - Home Link */}
-        <div className="flex-1 flex justify-center">
-          <div className="hidden lg:flex items-center gap-8">
-            <NavLink 
-              to="/" 
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 hover:tracking-tight relative group"
-            >
-              {t('home')}
-              <motion.div
-                className="absolute bottom-0 left-0 w-0 h-0.5 purple-gradient transition-all duration-300 group-hover:w-full"
-                initial={false}
-                whileHover={{ width: '100%' }}
-              />
-            </NavLink>
-          </div>
-        </div>
-
-        {/* Right - Controls */}
+        {/* Nav Links - Desktop */}
         <div className="hidden lg:flex items-center gap-8">
-          {/* Cart */}
-          <motion.button
-            onClick={() => setIsOpen(true)} 
-            className="relative p-4 w-12 h-12 rounded-full hover:bg-card/50 transition-all duration-300 text-muted-foreground hover:text-foreground hover-luxury"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <NavLink 
+            to="/" 
+            className="nav-link"
           >
+            {t('home')}
             <motion.div
-              className="absolute inset-0 purple-gradient opacity-0 hover:opacity-20 transition-opacity duration-300"
+              className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#A78BFA] transition-all duration-300 group-hover:w-full"
+              initial={false}
+              whileHover={{ width: '100%' }}
             />
-            <ShoppingCart size={20} />
-            {itemCount > 0 && (
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute top-0 right-0 h-5 w-5 min-w-[20px] rounded-full purple-gradient text-primary-foreground text-[11px] flex items-center justify-center font-semibold shadow-lg luxury-shadow"
-                style={{ transform: 'translate(35%, -35%)' }}
-                whileHover={{ scale: 1.1 }}
-              >
-                {itemCount}
-              </motion.span>
-            )}
-          </motion.button>
+          </NavLink>
         </div>
 
-        {/* Mobile */}
-        <div className="flex lg:hidden items-center gap-3">
-          <motion.button 
-            onClick={() => setIsOpen(true)} 
-            className="relative p-3 text-muted-foreground hover:text-foreground transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <ShoppingCart size={20} />
-            {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-6 w-6 rounded-full purple-gradient text-primary-foreground text-xs flex items-center justify-center font-bold">
-                {itemCount}
-              </span>
-            )}
-          </motion.button>
+        {/* Spacer for balance */}
+        <div className="hidden lg:flex items-center w-12"></div>
+
+        {/* Mobile Menu */}
+        <div className="flex lg:hidden items-center">
           <motion.button 
             onClick={() => setMobileOpen(!mobileOpen)} 
-            className="p-3 text-muted-foreground hover:text-foreground transition-colors"
+            className="p-3 text-[#9B99B8] hover:text-[#A78BFA] transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -114,7 +79,7 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu Dropdown */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -122,13 +87,13 @@ const Navbar: React.FC = () => {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden border-t border-border/50 bg-background/95 backdrop-blur-lg overflow-hidden"
+            className="lg:hidden border-t border-purple-500/20 bg-[#0A0A0F]/95 backdrop-blur-lg overflow-hidden"
           >
             <div className="p-6 flex flex-col gap-4">
               <NavLink 
                 to="/" 
                 onClick={() => setMobileOpen(false)} 
-                className="text-base text-muted-foreground hover:text-foreground transition-colors font-medium"
+                className="text-base text-[#9B99B8] hover:text-[#A78BFA] transition-colors font-medium"
               >
                 {t('home')}
               </NavLink>

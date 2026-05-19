@@ -10,7 +10,7 @@ const ProductGrid: React.FC = () => {
   if (loading) {
     return (
       <div id="products" className="container mx-auto px-6 py-24 luxury-pattern">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5">
           {[1, 2, 3, 4].map(i => (
             <div key={i} className="bg-card rounded-2xl border border-border/30 animate-pulse overflow-hidden luxury-glow">
               <div className="aspect-[4/5] bg-muted relative" />
@@ -44,7 +44,7 @@ const ProductGrid: React.FC = () => {
           <p className="text-xl text-muted-foreground font-light">{t('no_products')}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5">
           {products.map((product, i) => (
             <ProductCard key={product.id} product={product} index={i} />
           ))}
