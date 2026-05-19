@@ -25,9 +25,18 @@ const Navbar: React.FC = () => {
   return (
     <nav 
       dir="rtl" 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out navbar-transparent ${
-        scrolled ? 'scrolled' : ''
-      }`}
+      className="fixed top-0 left-0 right-0 z-50"
+      style={{
+        background: scrolled
+          ? 'rgba(10, 10, 15, 0.6)'
+          : 'rgba(10, 10, 15, 0.15)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderBottom: scrolled
+          ? '1px solid rgba(139, 92, 246, 0.25)'
+          : '1px solid rgba(139, 92, 246, 0.1)',
+        transition: 'all 0.3s ease',
+      }}
     >
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
@@ -87,7 +96,13 @@ const Navbar: React.FC = () => {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden border-t border-purple-500/20 bg-[#0A0A0F]/95 backdrop-blur-lg overflow-hidden"
+            style={{
+              background: 'rgba(10, 10, 15, 0.95)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              borderBottom: '1px solid rgba(139, 92, 246, 0.2)'
+            }}
+            className="lg:hidden overflow-hidden"
           >
             <div className="p-6 flex flex-col gap-4">
               <NavLink 
