@@ -30,8 +30,8 @@ const Navbar: React.FC = () => {
         background: scrolled
           ? 'rgba(10, 10, 15, 0.6)'
           : 'rgba(10, 10, 15, 0.15)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        backdropFilter: 'blur(4px)',
+        WebkitBackdropFilter: 'blur(4px)',
         borderBottom: scrolled
           ? '1px solid rgba(139, 92, 246, 0.25)'
           : '1px solid rgba(139, 92, 246, 0.1)',
@@ -98,8 +98,8 @@ const Navbar: React.FC = () => {
             transition={{ duration: 0.3 }}
             style={{
               background: 'rgba(10, 10, 15, 0.95)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
               borderBottom: '1px solid rgba(139, 92, 246, 0.2)'
             }}
             className="lg:hidden overflow-hidden"

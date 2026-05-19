@@ -234,8 +234,8 @@ const Admin: React.FC = () => {
           right: 0,
           zIndex: 100,
           background: 'rgba(10, 10, 15, 0.75)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
+          backdropFilter: 'blur(4px)',
+          WebkitBackdropFilter: 'blur(4px)',
           borderBottom: '1px solid rgba(139, 92, 246, 0.2)',
           padding: '0 24px',
           height: '64px',
@@ -320,7 +320,7 @@ const Admin: React.FC = () => {
                 background: tab === 'products' 
                   ? 'linear-gradient(135deg, rgba(109,40,217,0.4), rgba(139,92,246,0.3))' 
                   : 'rgba(26, 26, 38, 0.6)',
-                backdropFilter: 'blur(10px)',
+                backdropFilter: 'blur(2px)',
                 border: tab === 'products' 
                   ? '1px solid rgba(139, 92, 246, 0.5)' 
                   : '1px solid rgba(139, 92, 246, 0.2)',
@@ -347,7 +347,7 @@ const Admin: React.FC = () => {
                 background: tab === 'orders' 
                   ? 'linear-gradient(135deg, rgba(109,40,217,0.4), rgba(139,92,246,0.3))' 
                   : 'rgba(26, 26, 38, 0.6)',
-                backdropFilter: 'blur(10px)',
+                backdropFilter: 'blur(2px)',
                 border: tab === 'orders' 
                   ? '1px solid rgba(139, 92, 246, 0.5)' 
                   : '1px solid rgba(139, 92, 246, 0.2)',
@@ -429,8 +429,8 @@ const Admin: React.FC = () => {
                   <div
                     style={{
                       background: 'rgba(15, 10, 30, 0.95)',
-                      backdropFilter: 'blur(24px)',
-                      WebkitBackdropFilter: 'blur(24px)',
+                      backdropFilter: 'blur(6px)',
+                      WebkitBackdropFilter: 'blur(6px)',
                       border: '1px solid rgba(139, 92, 246, 0.25)',
                       borderRadius: '20px',
                       padding: '32px 28px',
@@ -727,8 +727,8 @@ const Admin: React.FC = () => {
                       key={product.id} 
                       style={{
                         background: 'rgba(15, 10, 30, 0.55)',
-                        backdropFilter: 'blur(12px)',
-                        WebkitBackdropFilter: 'blur(12px)',
+                        backdropFilter: 'blur(4px)',
+                        WebkitBackdropFilter: 'blur(4px)',
                         border: '1px solid rgba(139, 92, 246, 0.15)',
                         borderRadius: '16px',
                         padding: '16px 20px',

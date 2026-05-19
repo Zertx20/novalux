@@ -222,8 +222,8 @@ const ProductDetail: React.FC = () => {
               zIndex: 9999,
               padding: '12px 16px 20px',
               background: 'rgba(10, 10, 15, 0.9)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
+              backdropFilter: 'blur(4px)',
+              WebkitBackdropFilter: 'blur(4px)',
               borderTop: '1px solid rgba(139, 92, 246, 0.25)'
             }}>
               <button
@@ -261,8 +261,8 @@ const ProductDetail: React.FC = () => {
 
             <form onSubmit={handleSubmit} style={{
               background: 'rgba(15, 10, 30, 0.55)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
               border: '1px solid rgba(139, 92, 246, 0.2)',
               borderRadius: '20px',
               padding: '24px 20px'
@@ -282,7 +282,7 @@ const ProductDetail: React.FC = () => {
                     onChange={(e) => setFormData({...formData, nom: e.target.value})}
                     style={{
                       background: 'rgba(26, 26, 38, 0.6)',
-                      backdropFilter: 'blur(8px)',
+                      backdropFilter: 'blur(2px)',
                       border: '1px solid rgba(139, 92, 246, 0.25)',
                       borderRadius: '12px',
                       color: '#F1F0FF',
@@ -308,7 +308,7 @@ const ProductDetail: React.FC = () => {
                       onChange={(e) => setFormData({...formData, telephone: e.target.value})}
                       style={{
                         background: 'rgba(26, 26, 38, 0.6)',
-                        backdropFilter: 'blur(8px)',
+                        backdropFilter: 'blur(2px)',
                         border: '1px solid rgba(139, 92, 246, 0.25)',
                         borderRadius: '12px',
                         color: '#F1F0FF',
@@ -334,7 +334,7 @@ const ProductDetail: React.FC = () => {
                     onChange={(e) => setFormData({...formData, adresse: e.target.value})}
                     style={{
                       background: 'rgba(26, 26, 38, 0.6)',
-                      backdropFilter: 'blur(8px)',
+                      backdropFilter: 'blur(2px)',
                       border: '1px solid rgba(139, 92, 246, 0.25)',
                       borderRadius: '12px',
                       color: '#F1F0FF',
@@ -424,7 +424,7 @@ const ProductDetail: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     style={{
                       background: 'rgba(88, 28, 135, 0.2)',
-                      backdropFilter: 'blur(10px)',
+                      backdropFilter: 'blur(4px)',
                       border: '1px solid rgba(139, 92, 246, 0.3)',
                       borderRadius: '14px',
                       padding: '20px 24px',
@@ -565,7 +565,7 @@ const ProductDetail: React.FC = () => {
                     onChange={(e) => setFormData({...formData, nom: e.target.value})}
                     style={{
                       background: 'rgba(26, 26, 38, 0.6)',
-                      backdropFilter: 'blur(8px)',
+                      backdropFilter: 'blur(2px)',
                       border: '1px solid rgba(139, 92, 246, 0.25)',
                       borderRadius: '12px',
                       color: '#F1F0FF',
@@ -591,7 +591,7 @@ const ProductDetail: React.FC = () => {
                       onChange={(e) => setFormData({...formData, telephone: e.target.value})}
                       style={{
                         background: 'rgba(26, 26, 38, 0.6)',
-                        backdropFilter: 'blur(8px)',
+                        backdropFilter: 'blur(2px)',
                         border: '1px solid rgba(139, 92, 246, 0.25)',
                         borderRadius: '12px',
                         color: '#F1F0FF',
@@ -617,7 +617,7 @@ const ProductDetail: React.FC = () => {
                     onChange={(e) => setFormData({...formData, adresse: e.target.value})}
                     style={{
                       background: 'rgba(26, 26, 38, 0.6)',
-                      backdropFilter: 'blur(8px)',
+                      backdropFilter: 'blur(2px)',
                       border: '1px solid rgba(139, 92, 246, 0.25)',
                       borderRadius: '12px',
                       color: '#F1F0FF',
@@ -707,7 +707,7 @@ const ProductDetail: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     style={{
                       background: 'rgba(88, 28, 135, 0.2)',
-                      backdropFilter: 'blur(10px)',
+                      backdropFilter: 'blur(4px)',
                       border: '1px solid rgba(139, 92, 246, 0.3)',
                       borderRadius: '14px',
                       padding: '20px 24px',
